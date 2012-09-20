@@ -1,0 +1,35 @@
+﻿body
+{
+	font-family:Arial;
+	font-size:12px;
+	margin:20px;
+}
+
+.Poker
+{
+	border: solid 1px #000000;
+	background-color:Blue;
+	width:80px;
+	height:100px;
+	margin:5px;
+	position:absolute;
+}
+
+#Deck
+{
+	border: solid 1px #000000;
+	background-color:red;
+	width:80px;
+	height:100px;
+	margin:5px;
+	position:absolute;
+	top:225px;
+	left:1115px;
+}
+
+#Table
+{
+	width:1195px;
+	height:500px;
+	border:solid 1px #000000;
+}
