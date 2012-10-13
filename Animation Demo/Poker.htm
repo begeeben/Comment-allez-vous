@@ -15,6 +15,7 @@ var PlayerCount = 2;
         function Poker(id, value) {
             this.ID = id;
             this.Value = value;
+            this.Suit = "";
             this.PlayerNo = -1;
             this.PlayerID = "";
         };
@@ -76,17 +77,15 @@ var PlayerCount = 2;
                     }, 50);
                 })
                 .mousedown(function() {
-                    console.log($(this).attr("id") + 'mousedown');
                     $moveTarget = $(this);
+                    $("#Deck").animate({ left: 0 }, 10000);
                 });
 
                 $("#Table").mousemove(function(event) {
-                    console.log('top : ' + event.pageY + " left : ", event.pageX);
                     if ($moveTarget != null) {
                         $moveTarget.css("top", event.pageY - (parseInt($moveTarget.css("height")) / 2)).css("left", event.pageX - (parseInt($moveTarget.css("width")) / 2));
                     }
                 }).mouseup(function() {
-                    console.log($(this).attr("id") + 'mouseup');
                     $moveTarget = null;
                 });
 
@@ -98,7 +97,7 @@ var PlayerCount = 2;
                 var tmpLeft = $Table.offset().left;
 
                 var delayTime = 0;
-                var useTime = 50;
+                var useTime = 100;
                 for (var index in deck) {
                     var playerNo = $("#" + deck[index].ID).attr("PlayerNo");
 

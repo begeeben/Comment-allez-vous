@@ -85,5 +85,28 @@
         <li><a href="#">5</a></li>
         <li><a href="#">6</a></li>
     </ul>
+    <div id="testRotate" class="divClass">
+        Test
+    </div>
+    <script type="text/javascript">
+        $('#testRotate').css('rotate', 90);
+        $('#testRotate').animate({ rotate: 180 });
+    </script>
+    <style type="text/css">
+        .divClass {
+            width: 100px;
+            height: 75px;
+            background-color: cyan;
+            border: 1px solid black;
+        }
+
+        #testRotate {
+            transform: rotate(60deg);
+            -ms-transform: rotate(60deg); /* IE 9 */
+            -moz-transform: rotate(60deg); /* Firefox */
+            -webkit-transform: rotate(60deg); /* Safari and Chrome */
+            -o-transform: rotate(60deg); /* Opera */
+        }
+    </style>
 </body>
 </html>
