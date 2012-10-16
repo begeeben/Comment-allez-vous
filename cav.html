@@ -12,8 +12,10 @@
     <script src='scripts/cav.js'></script>
 </head>
 <body>
-    <h1>
-        Comment-allez-vous</h1>
+    <div id='header'>
+        <h1>
+            Comment-allez-vous</h1>
+    </div>
     <div id='browser'>
         <div class='buttons'>
             <input id='disconnect' class='button' type='button' value='disconnect' disabled='disabled'>
@@ -43,10 +45,10 @@
                 <thead>
                     <tr>
                         <th>
-                            X
+                            Player 1
                         </th>
                         <th>
-                            O
+                            Player 2
                         </th>
                         <th>
                             Room
@@ -71,7 +73,7 @@
             <div id='board-status'>
             </div>
         </div>
-        <div id='chat'>
+        <div id='chat' class='block'>
             <div id='messages'>
             </div>
             <input type='text' id='input'>
