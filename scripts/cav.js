@@ -87,7 +87,7 @@ var Cav = {
             $('#wait').removeAttr('disabled');
             $('#browser').hide();
             $('#game').show();
-            Cav.draw_board();
+            //Cav.draw_board();
             $('#board-status').html('Waiting for other player...');
 
             var nick = Cav.connection.jid;

@@ -442,9 +442,9 @@ var Referee = {
             winner: null
         };
         // deal cards
-        dealCards(newGame);
+        Referee.dealCards(newGame);
         // get card picture urls
-        getPictures(newGame);
+        Referee.getPictures(newGame);
 
         return newGame;
     },
@@ -454,7 +454,7 @@ var Referee = {
         for (i = 0; i < 27; i++) {
             cards[i] = i;
         }
-        shuffle(cards);
+        Referee.shuffle(cards);
         game.player1Cards = cards.slice(0, 13);
         game.player2Cards = cards.slice(14, 26);
     },
