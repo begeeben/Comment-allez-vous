@@ -147,7 +147,7 @@ var Cav = {
             cmd = cmdNode.get(0).tagName;
         }
 
-        if (cmd === 'move') {
+        if (cmd === 'move' || cmd === 'game-started') {
             return {
                 functionName: cmdNode.attr('functionName'),
                 turn: cmdNode.attr('turn'),
