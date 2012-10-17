@@ -31,8 +31,8 @@ var Referee = {
 
         var found = false;
         $.each(Referee.games, function () {
-            if (Strophe.getBareJidFromJid(this.x_player) === jid ||
-                Strophe.getBareJidFromJid(this.o_player) === jid) {
+            if (Strophe.getBareJidFromJid(this.player1) === jid ||
+                Strophe.getBareJidFromJid(this.player2) === jid) {
                 found = true;
                 return false;
             }
@@ -97,7 +97,7 @@ var Referee = {
             // make sure it's a game and player we care about
             if (game &&
                 (game.status === 'starting' || game.status === 'playing') &&
-                (player === game.x_player || player === game.o_player)) {
+                (player === game.player1 || player === game.player2)) {
                 if (game.status === 'starting') {
                     if (type !== 'unavailable') {
                         // waiting for one less player; if both are
@@ -119,10 +119,10 @@ var Referee = {
                 } else {
                     // during play, forfeit a player if they leave the room
                     if (type === 'unavailable') {
-                        if (player === game.x_player) {
-                            game.winner = game.o_player;
+                        if (player === game.player1) {
+                            game.winner = game.player2;
                         } else {
-                            game.winner = game.x_player;
+                            game.winner = game.player1;
                         }
 
                         Referee.end_game(game, 'finished');
@@ -135,23 +135,23 @@ var Referee = {
                     msg.c('body').t('Waiting for players...').up()
                         .c('game-state', { xmlns: Referee.NS_CAV,
                             'phase': game.status,
-                            'x-player': game.x_player,
-                            'o-player': game.o_player
+                            'player1': game.player1,
+                            'player2': game.player2
                         });
                 } else if (game.status === 'playing') {
                     msg.c('body').t('Game in progress.').up()
                         .c('game-state', { xmlns: Referee.NS_CAV,
                             'phase': game.status,
-                            'x-player': game.x_player,
-                            'o-player': game.o_player,
+                            'player1': game.player1,
+                            'player2': game.player2,
                             'pos': game.board.toString()
                         });
                 } else {
                     msg.c('body').t('Game over.').up()
                         .c('game-state', { xmlns: Referee.NS_CAV,
                             'phase': 'finished',
-                            'x-player': game.x_player,
-                            'o-player': game.o_player,
+                            'player1': game.player1,
+                            'player2': game.player2,
                             'pos': game.board.toString()
                         });
                     if (game.winner) {
@@ -285,32 +285,6 @@ var Referee = {
 
         Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
     },
-    // send out the initial game list
-    send_games: function (jid) {
-        var msg = $msg({ to: jid })
-            .c('games', { xmlns: Referee.NS_CAV });
-
-        $.each(Referee.games, function (room) {
-            msg.c('game', { 'x-player': this.x_player,
-                'o-player': this.o_player,
-                'room': Referee.game_room(room)
-            }).up();
-        });
-
-        Referee.connection.send(msg);
-    },
-    // create initial game state
-    new_game: function () {
-        return {
-            room: null,
-            board: new Referee.Board(),
-            waiting: 2,                 // the referee is waiting for two players to join the room before the game starts
-            status: 'starting',         // starting, playing, finished, and aborted
-            x_player: null,
-            o_player: null,
-            winner: null
-        };
-    },
 
     on_game_start: function (iq, id, from, elem) {
         var with_jid = elem.attr('with');
@@ -338,6 +312,127 @@ var Referee = {
         Referee.create_game(from, with_jid);
     },
 
+    on_resign: function (iq, id, from) {
+        var game = Referee.find_game(from);
+        if (!game || game.status === 'finished' ||
+            game.status === 'aborted' ||
+            game.status === 'starting') {
+            Referee.send_error(iq, 'cancel', 'bad-request');
+        } else {
+            if (from === game.player1) {
+                game.winner = game.player2;
+            } else {
+                game.winner = game.player1;
+            }
+
+            Referee.end_game(game, 'finished');
+
+            Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
+
+            $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
+                              " resigned game " + game.room + ".</p>");
+        }
+    },
+
+    // send client movement to game room  
+    on_move: function (iq, id, from, elem) {
+        var game = Referee.find_game(from);
+        var functionName = elem.attr('functionName');
+        var turn = elem.attr('turn');
+        var pokerCards = elem.attr('pokerCards');
+        var picMapping = elem.attr('picMapping');
+        var index1 = elem.attr('index1');
+        var index2 = elem.attr('index2');
+//        var row = elem.attr('row');
+//        var col = elem.attr('col');
+
+        if (!game) {
+            Referee.send_error(iq, 'cancel', 'not-allowed');
+        } else if (!row || !col) {
+            Referee.send_error(iq, 'modify', 'bad-request');
+//        } else if (!game || game.status !== 'playing' ||
+//                   (game.board.currentSide() === 'x' &&
+//                    from === game.player2) ||
+//                   (game.board.currentSide() === 'o' &&
+//                    from === game.player1)) {
+//            Referee.send_error(iq, 'wait', 'unexpected-request');
+        } else {
+//            var side = null;
+//            if (from === game.player1) {
+//                side = 'x';
+//            } else {
+//                side = 'o';
+//            }
+
+            try {
+//                game.board.move(side, col, row);
+
+                Referee.connection.send(
+                    $iq({ to: from, id: id, type: 'result' }));
+
+                Referee.connection.send(
+                    Referee.muc_msg(game)
+//                        .c('body').t(
+//                            Strophe.getBareJidFromJid(from) +
+//                                ' has placed an ' + side + ' at ' +
+//                                col + row).up()
+                        .c('move', { xmlns: Referee.NS_CAV,
+                            functionName: functionName,
+                            turn: turn,
+                            pokerCards: pokerCards,
+                            picMapping: picMapping,
+                            index1: index1,
+                            index2: index2
+//                            col: col,
+//                            row: row
+                        }));
+
+//                $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
+//                                  " moved in game " + game.room + ".</p>");
+
+//                // check for end of game
+//                var winner = game.board.gameOver();
+//                if (winner) {
+//                    if (winner === 'x') {
+//                        game.winner = game.player1;
+//                    } else if (winner === 'o') {
+//                        game.winner = game.player2;
+//                    }
+
+//                    Referee.end_game(game, 'finished');
+//                }
+            } catch (e) {
+                Referee.send_error(iq, 'cancel', 'not-acceptable');
+            }
+        }
+    },
+    // send out the current playing game list
+    send_games: function (jid) {
+        var msg = $msg({ to: jid })
+            .c('games', { xmlns: Referee.NS_CAV });
+
+        $.each(Referee.games, function (room) {
+            msg.c('game', { 'player1': this.player1,
+                'player2': this.player2,
+                'room': Referee.game_room(room)
+            }).up();
+        });
+
+        Referee.connection.send(msg);
+    },
+    // create initial game state
+    new_game: function () {
+        return {
+            room: null,
+            board: new Referee.Board(),
+            waiting: 2,                 // the referee is waiting for two players to join the room before the game starts
+            status: 'starting',         // starting, playing, finished, and aborted
+            player1: null,
+            player2: null,
+            winner: null
+        };
+    },
+
     create_game: function (player1, player2) {
         // generate a random room name, and make sure it
         // doesn't already exist to our knowledge
@@ -357,12 +452,12 @@ var Referee = {
 
                 // create initial game state with randomized sides
                 if (Math.random() < 0.5) {
-                    game.x_player = player1;
-                    game.o_player = player2;
+                    game.player1 = player1;
+                    game.player2 = player2;
                     Referee.games[room] = game;
                 } else {
-                    game.x_player = player2;
-                    game.o_player = player1;
+                    game.player1 = player2;
+                    game.player2 = player1;
                     Referee.games[room] = game;
                 }
 
@@ -372,8 +467,8 @@ var Referee = {
                 // notify everyone about the game
                 Referee.broadcast(function (msg) {
                     return msg.c('games', { xmlns: Referee.NS_CAV })
-                        .c('game', { 'x-player': game.x_player,
-                            'o-player': game.o_player,
+                        .c('game', { 'player1': game.player1,
+                            'player2': game.player2,
                             'room': Referee.game_room(room)
                         });
                 });
@@ -396,7 +491,7 @@ var Referee = {
 
     invite_players: function (game) {
         // send room invites
-        $.each([game.x_player, game.o_player], function () {
+        $.each([game.player1, game.player2], function () {
             Referee.connection.send(
                 $msg({ to: game.room + "@" + Referee.MUC_SERVICE })
                     .c('x', { xmlns: Referee.NS_MUC_USER })
@@ -418,8 +513,8 @@ var Referee = {
             Referee.muc_msg(game)
                 .c('body').t('The match has started.').up()
                 .c('game-started', { xmlns: Referee.NS_CAV,
-                    'x-player': game.x_player,
-                    'o-player': game.o_player
+                    'player1': game.player1,
+                    'player2': game.player2
                 }));
 
         $('#log').prepend("<p>Started game " + game.room + ".</p>");
@@ -461,8 +556,8 @@ var Referee = {
         // notify all the players
         Referee.broadcast(function (msg) {
             return msg.c('game-over', { xmlns: Referee.NS_CAV })
-                .c('game', { 'x-player': game.x_player,
-                    'o-player': game.o_player,
+                .c('game', { 'player1': game.player1,
+                    'player2': game.player2,
                     'room': Referee.game_room(game.room)
                 });
         });
@@ -473,108 +568,13 @@ var Referee = {
     find_game: function (player) {
         var game = null;
         $.each(Referee.games, function (r, g) {
-            if (g.x_player === player || g.o_player === player) {
+            if (g.player1 === player || g.player2 === player) {
                 game = g;
                 return false;
             }
         });
 
         return game;
-    },
-
-    on_resign: function (iq, id, from) {
-        var game = Referee.find_game(from);
-        if (!game || game.status === 'finished' ||
-            game.status === 'aborted' ||
-            game.status === 'starting') {
-            Referee.send_error(iq, 'cancel', 'bad-request');
-        } else {
-            if (from === game.x_player) {
-                game.winner = game.o_player;
-            } else {
-                game.winner = game.x_player;
-            }
-
-            Referee.end_game(game, 'finished');
-
-            Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
-
-            $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
-                              " resigned game " + game.room + ".</p>");
-        }
-    },
-
-    // broadcast client movement 
-    on_move: function (iq, id, from, elem) {
-        var game = Referee.find_game(from);
-        var functionName = elem.attr('functionName');
-        var turn = elem.attr('turn');
-        var pokerCards = elem.attr('pokerCards');
-        var picMapping = elem.attr('picMapping');
-        var index1 = elem.attr('index1');
-        var index2 = elem.attr('index2');
-//        var row = elem.attr('row');
-//        var col = elem.attr('col');
-
-        if (!game) {
-            Referee.send_error(iq, 'cancel', 'not-allowed');
-        } else if (!row || !col) {
-            Referee.send_error(iq, 'modify', 'bad-request');
-//        } else if (!game || game.status !== 'playing' ||
-//                   (game.board.currentSide() === 'x' &&
-//                    from === game.o_player) ||
-//                   (game.board.currentSide() === 'o' &&
-//                    from === game.x_player)) {
-//            Referee.send_error(iq, 'wait', 'unexpected-request');
-        } else {
-//            var side = null;
-//            if (from === game.x_player) {
-//                side = 'x';
-//            } else {
-//                side = 'o';
-//            }
-
-            try {
-//                game.board.move(side, col, row);
-
-                Referee.connection.send(
-                    $iq({ to: from, id: id, type: 'result' }));
-
-                Referee.connection.send(
-                    Referee.muc_msg(game)
-//                        .c('body').t(
-//                            Strophe.getBareJidFromJid(from) +
-//                                ' has placed an ' + side + ' at ' +
-//                                col + row).up()
-                        .c('move', { xmlns: Referee.NS_CAV,
-                            functionName: functionName,
-                            turn: turn,
-                            pokerCards: pokerCards,
-                            picMapping: picMapping,
-                            index1: index1,
-                            index2: index2
-//                            col: col,
-//                            row: row
-                        }));
-
-//                $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
-//                                  " moved in game " + game.room + ".</p>");
-
-//                // check for end of game
-//                var winner = game.board.gameOver();
-//                if (winner) {
-//                    if (winner === 'x') {
-//                        game.winner = game.x_player;
-//                    } else if (winner === 'o') {
-//                        game.winner = game.o_player;
-//                    }
-
-//                    Referee.end_game(game, 'finished');
-//                }
-            } catch (e) {
-                Referee.send_error(iq, 'cancel', 'not-acceptable');
-            }
-        }
     }
 };
 
