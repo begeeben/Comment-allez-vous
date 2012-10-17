@@ -3,6 +3,13 @@ Referee.Board = function () {
 };
 
 Referee.Board.prototype = {
+
+    player1Jid: null,
+    player2Jid: null,
+    player1Cards: [],
+    player2Cards: [],
+    picMapping: [],
+
     validMove: function (side, col, row) {      // determine whether tha move is legal
         var curSide = this.currentSide();
         if (side !== curSide) {
