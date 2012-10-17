@@ -5,7 +5,7 @@ var Referee = {
     waiting: [],
     presence: {},
 
-    NS_TOETEM: "https://github.com/begeeben/Comment-allez-vous",
+    NS_CAV: "https://github.com/begeeben/Comment-allez-vous",
     NS_MUC: "http://jabber.org/protocol/muc",
     NS_MUC_USER: "http://jabber.org/protocol/muc#user",
     NS_MUC_OWNER: "http://jabber.org/protocol/muc#owner",
@@ -34,7 +34,7 @@ var Referee = {
             if (Strophe.getBareJidFromJid(this.x_player) === jid ||
                 Strophe.getBareJidFromJid(this.o_player) === jid) {
                 found = true;
-               return false;
+                return false;
             }
         });
 
@@ -56,8 +56,8 @@ var Referee = {
             Referee.waiting.splice(i, 1);
 
             Referee.broadcast(function (msg) {
-                return msg.c('not-waiting', {xmlns: Referee.NS_TOETEM})
-                    .c('player', {jid: jid});
+                return msg.c('not-waiting', { xmlns: Referee.NS_CAV })
+                    .c('player', { jid: jid });
             });
 
             $('#log').prepend("<p>Removed " + bare_jid + " from " +
@@ -66,17 +66,18 @@ var Referee = {
     },
 
     send_error: function (iq, etype, ename, app_error) {
-        var error = $iq({to: $(iq).attr('from'),
-                         id: $(iq).attr('id'),
-                         type: 'error'})
+        var error = $iq({ to: $(iq).attr('from'),
+            id: $(iq).attr('id'),
+            type: 'error'
+        })
             .cnode(iq.cloneNode(true)).up()
-            .c('error', {type: etype})
-            .c(ename, {xmlns: Strophe.NS.STANZAS}).up();
+            .c('error', { type: etype })
+            .c(ename, { xmlns: Strophe.NS.STANZAS }).up();
 
         if (app_error) {
-            error.c(app_error, {xmlns: Referee.NS_TOETEM});
+            error.c(app_error, { xmlns: Referee.NS_CAV });
         }
-        
+
         Referee.connection.send(error);
     },
 
@@ -94,7 +95,7 @@ var Referee = {
             var game = Referee.games[room];
 
             // make sure it's a game and player we care about
-            if (game && 
+            if (game &&
                 (game.status === 'starting' || game.status === 'playing') &&
                 (player === game.x_player || player === game.o_player)) {
                 if (game.status === 'starting') {
@@ -102,7 +103,7 @@ var Referee = {
                         // waiting for one less player; if both are
                         // now present, the game is started
                         game.waiting -= 1;
-                        
+
                         $('#log').prepend("<p>Player " + bare_from +
                                           " arrived to game " + game.room +
                                           ".</p>");
@@ -123,35 +124,38 @@ var Referee = {
                         } else {
                             game.winner = game.x_player;
                         }
-                        
+
                         Referee.end_game(game, 'finished');
                     }
                 }
             } else if (game && type !== 'unavailable') {
                 // handle observers joining
-                var msg = $msg({to: from, type: 'chat'});
+                var msg = $msg({ to: from, type: 'chat' });
                 if (game.status === 'starting') {
                     msg.c('body').t('Waiting for players...').up()
-                        .c('game-state', {xmlns: Referee.NS_TOETEM,
-                                          'phase': game.status,
-                                          'x-player': game.x_player,
-                                          'o-player': game.o_player});
+                        .c('game-state', { xmlns: Referee.NS_CAV,
+                            'phase': game.status,
+                            'x-player': game.x_player,
+                            'o-player': game.o_player
+                        });
                 } else if (game.status === 'playing') {
                     msg.c('body').t('Game in progress.').up()
-                        .c('game-state', {xmlns: Referee.NS_TOETEM,
-                                          'phase': game.status,
-                                          'x-player': game.x_player,
-                                          'o-player': game.o_player,
-                                          'pos': game.board.toString()});
+                        .c('game-state', { xmlns: Referee.NS_CAV,
+                            'phase': game.status,
+                            'x-player': game.x_player,
+                            'o-player': game.o_player,
+                            'pos': game.board.toString()
+                        });
                 } else {
                     msg.c('body').t('Game over.').up()
-                        .c('game-state', {xmlns: Referee.NS_TOETEM,
-                                          'phase': 'finished',
-                                          'x-player': game.x_player,
-                                          'o-player': game.o_player,
-                                          'pos': game.board.toString()});
+                        .c('game-state', { xmlns: Referee.NS_CAV,
+                            'phase': 'finished',
+                            'x-player': game.x_player,
+                            'o-player': game.o_player,
+                            'pos': game.board.toString()
+                        });
                     if (game.winner) {
-                        msg.attr({winner: game.winner});
+                        msg.attr({ winner: game.winner });
                     }
                 }
 
@@ -160,12 +164,12 @@ var Referee = {
                 $('#log').prepend("<p>Sent state to observer " + bare_from +
                                   " in game " + game.room + ".</p>");
             }
-        } else if ((!type || type === "unavailable") && 
+        } else if ((!type || type === "unavailable") &&
                    bare_from !== bare_jid) {
             // handle directed presence from players
             if (type === "unavailable") {
                 delete Referee.presence[bare_from];
-                
+
                 // remove from lists
                 Referee.remove_waiting(from);
 
@@ -174,43 +178,43 @@ var Referee = {
                 Referee.presence[bare_from] = from;
 
                 $('#log').prepend("<p>Registered " + bare_from + ".</p>");
-                
+
                 Referee.send_waiting(from);
                 Referee.send_games(from);
             }
         }
-        
+
         return true;
     },
 
     broadcast: function (func) {
         $.each(Referee.presence, function () {
-            var msg = func($msg({to: this}));
+            var msg = func($msg({ to: this }));
             Referee.connection.send(msg);
         });
     },
 
     send_waiting: function (jid) {
-        var msg = $msg({to: jid})
-            .c('waiting', {xmlns: Referee.NS_TOETEM});
+        var msg = $msg({ to: jid })
+            .c('waiting', { xmlns: Referee.NS_CAV });
 
         $.each(Referee.waiting, function () {
-            msg.c('player', {jid: this}).up();
+            msg.c('player', { jid: this }).up();
         });
 
         Referee.connection.send(msg);
     },
-    
+
     on_iq: function (iq) {
         var id = $(iq).attr('id');
         var from = $(iq).attr('from');
         var type = $(iq).attr('type');
-        
+
         // make sure we know the user's presence first
         if (!Referee.presence[Strophe.getBareJidFromJid(from)]) {
             Referee.send_error(iq, 'auth', 'forbidden');
         } else {
-            var child = $(iq).find('*[xmlns="' + Referee.NS_TOETEM +
+            var child = $(iq).find('*[xmlns="' + Referee.NS_CAV +
                                    '"]:first');
             if (child.length > 0) {
                 if (type === 'get') {
@@ -220,30 +224,30 @@ var Referee = {
                     // ignore IQ-error and IQ-result
                     return true;
                 }
-                
+
                 switch (child[0].tagName) {
-                case 'waiting':
-                    Referee.on_waiting(id, from, child);
-                    break;
-                    
-                case 'stop-waiting':
-                    Referee.on_stop_waiting(id, from, child);
-                    break;
-                    
-                case 'start':
-                    Referee.on_game_start(iq, id, from, child);
-                    break;
+                    case 'waiting':
+                        Referee.on_waiting(id, from, child);
+                        break;
 
-                case 'resign':
-                    Referee.on_resign(iq, id, from);
-                    break;
+                    case 'stop-waiting':
+                        Referee.on_stop_waiting(id, from, child);
+                        break;
 
-                case 'move':
-                    Referee.on_move(iq, id, from, child);
-                    break;
+                    case 'start':
+                        Referee.on_game_start(iq, id, from, child);
+                        break;
 
-                default:
-                    Referee.send_error(iq, 'cancel', 'bad-request');
+                    case 'resign':
+                        Referee.on_resign(iq, id, from);
+                        break;
+
+                    case 'move':
+                        Referee.on_move(iq, id, from, child);
+                        break;
+
+                    default:
+                        Referee.send_error(iq, 'cancel', 'bad-request');
                 }
             } else {
                 Referee.send_error(iq, 'cancel', 'feature-not-implemented');
@@ -262,11 +266,11 @@ var Referee = {
 
         Referee.waiting.push(from);
 
-        Referee.connection.send($iq({to: from, id: id, type: 'result'}));
+        Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
 
         Referee.broadcast(function (msg) {
-            return msg.c('waiting', {xmlns: Referee.NS_TOETEM})
-                .c('player', {jid: from});
+            return msg.c('waiting', { xmlns: Referee.NS_CAV })
+                .c('player', { jid: from });
         });
 
         $('#log').prepend("<p>Added " +
@@ -279,17 +283,18 @@ var Referee = {
             Referee.remove_waiting(from);
         }
 
-        Referee.connection.send($iq({to: from, id: id, type: 'result'}));
+        Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
     },
     // send out the initial game list
     send_games: function (jid) {
-        var msg = $msg({to: jid})
-            .c('games', {xmlns: Referee.NS_TOETEM});
+        var msg = $msg({ to: jid })
+            .c('games', { xmlns: Referee.NS_CAV });
 
         $.each(Referee.games, function (room) {
-            msg.c('game', {'x-player': this.x_player,
-                           'o-player': this.o_player,
-                           'room': Referee.game_room(room)}).up();
+            msg.c('game', { 'x-player': this.x_player,
+                'o-player': this.o_player,
+                'room': Referee.game_room(room)
+            }).up();
         });
 
         Referee.connection.send(msg);
@@ -323,7 +328,7 @@ var Referee = {
             return;
         }
 
-        Referee.connection.send($iq({to: from, id: id, type: 'result'}));
+        Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
 
         // remove players from waiting list
         Referee.remove_waiting(from);
@@ -366,35 +371,36 @@ var Referee = {
 
                 // notify everyone about the game
                 Referee.broadcast(function (msg) {
-                    return msg.c('games', {xmlns: Referee.NS_TOETEM})
-                        .c('game', {'x-player': game.x_player,
-                                    'o-player': game.o_player,
-                                    'room': Referee.game_room(room)});
+                    return msg.c('games', { xmlns: Referee.NS_CAV })
+                        .c('game', { 'x-player': game.x_player,
+                            'o-player': game.o_player,
+                            'room': Referee.game_room(room)
+                        });
                 });
 
                 $('#log').prepend("<p>Created game room " + room + ".</p>");
             } else {
                 // room was already in use, we need to start over
                 Referee.connection.send(
-                    $pres({to: room_jid, type: 'unavailable'}));
+                    $pres({ to: room_jid, type: 'unavailable' }));
                 Referee.create_game(player1, player2);
             }
 
             return false;
         }, null, "presence", null, null, room_jid);
-        
+
         Referee.connection.send(
-            $pres({to: room_jid})
-                .c("x", {xmlns: Referee.NS_MUC}));
+            $pres({ to: room_jid })
+                .c("x", { xmlns: Referee.NS_MUC }));
     },
-    
+
     invite_players: function (game) {
         // send room invites
         $.each([game.x_player, game.o_player], function () {
             Referee.connection.send(
-                $msg({to: game.room + "@" + Referee.MUC_SERVICE})
-                    .c('x', {xmlns: Referee.NS_MUC_USER})
-                    .c('invite', {to: this}));
+                $msg({ to: game.room + "@" + Referee.MUC_SERVICE })
+                    .c('x', { xmlns: Referee.NS_MUC_USER })
+                    .c('invite', { to: this }));
         });
     },
     // takes the base room name and constructs the appropriate JID for the game¡¦s room
@@ -403,7 +409,7 @@ var Referee = {
     },
     // returns a partially built stanza for communication with the room¡¦s occu-pants
     muc_msg: function (game) {
-        return $msg({to: Referee.game_room(game.room), type: "groupchat"});
+        return $msg({ to: Referee.game_room(game.room), type: "groupchat" });
     },
 
     start_game: function (game) {
@@ -411,9 +417,10 @@ var Referee = {
         Referee.connection.send(
             Referee.muc_msg(game)
                 .c('body').t('The match has started.').up()
-                .c('game-started', {xmlns: Referee.NS_TOETEM,
-                                    'x-player': game.x_player,
-                                    'o-player': game.o_player}));
+                .c('game-started', { xmlns: Referee.NS_CAV,
+                    'x-player': game.x_player,
+                    'o-player': game.o_player
+                }));
 
         $('#log').prepend("<p>Started game " + game.room + ".</p>");
     },
@@ -422,13 +429,13 @@ var Referee = {
         game.status = status;
 
         // let room know the result of the game
-        var attrs = {xmlns: Referee.NS_TOETEM};
+        var attrs = { xmlns: Referee.NS_CAV };
         if (game.winner) {
             attrs.winner = game.winner;
         }
 
         var msg = "";
-        if (game.winner) { 
+        if (game.winner) {
             msg += Strophe.getBareJidFromJid(game.winner) +
                 " has won the match."
         } else if (status === 'finished') {
@@ -447,15 +454,17 @@ var Referee = {
 
         // leave the room
         Referee.connection.send(
-            $pres({to: game.room + "@" + Referee.MUC_SERVICE + "/Referee",
-                   type: "unavailable"}));
+            $pres({ to: game.room + "@" + Referee.MUC_SERVICE + "/Referee",
+                type: "unavailable"
+            }));
 
         // notify all the players
         Referee.broadcast(function (msg) {
-            return msg.c('game-over', {xmlns: Referee.NS_TOETEM})
-                .c('game', {'x-player': game.x_player,
-                            'o-player': game.o_player,
-                            'room': Referee.game_room(game.room)});
+            return msg.c('game-over', { xmlns: Referee.NS_CAV })
+                .c('game', { 'x-player': game.x_player,
+                    'o-player': game.o_player,
+                    'room': Referee.game_room(game.room)
+                });
         });
 
         $('#log').prepend("<p>Finished game " + game.room + ".</p>");
@@ -477,7 +486,7 @@ var Referee = {
         var game = Referee.find_game(from);
         if (!game || game.status === 'finished' ||
             game.status === 'aborted' ||
-            game.status === 'starting' ) {
+            game.status === 'starting') {
             Referee.send_error(iq, 'cancel', 'bad-request');
         } else {
             if (from === game.x_player) {
@@ -488,66 +497,80 @@ var Referee = {
 
             Referee.end_game(game, 'finished');
 
-            Referee.connection.send($iq({to: from, id: id, type: 'result'}));
+            Referee.connection.send($iq({ to: from, id: id, type: 'result' }));
 
             $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
                               " resigned game " + game.room + ".</p>");
         }
     },
 
+    // broadcast client movement 
     on_move: function (iq, id, from, elem) {
         var game = Referee.find_game(from);
-        var row = elem.attr('row');
-        var col = elem.attr('col');
+        var functionName = elem.attr('functionName');
+        var turn = elem.attr('turn');
+        var pokerCards = elem.attr('pokerCards');
+        var picMapping = elem.attr('picMapping');
+        var index1 = elem.attr('index1');
+        var index2 = elem.attr('index2');
+//        var row = elem.attr('row');
+//        var col = elem.attr('col');
 
         if (!game) {
             Referee.send_error(iq, 'cancel', 'not-allowed');
         } else if (!row || !col) {
             Referee.send_error(iq, 'modify', 'bad-request');
-        } else if (!game || game.status !== 'playing' ||
-                   (game.board.currentSide() === 'x' &&
-                    from === game.o_player) ||
-                   (game.board.currentSide() === 'o' &&
-                    from === game.x_player)) {
-            Referee.send_error(iq, 'wait', 'unexpected-request');
+//        } else if (!game || game.status !== 'playing' ||
+//                   (game.board.currentSide() === 'x' &&
+//                    from === game.o_player) ||
+//                   (game.board.currentSide() === 'o' &&
+//                    from === game.x_player)) {
+//            Referee.send_error(iq, 'wait', 'unexpected-request');
         } else {
-            var side = null;
-            if (from === game.x_player) {
-                side = 'x';
-            } else {
-                side = 'o';
-            }
+//            var side = null;
+//            if (from === game.x_player) {
+//                side = 'x';
+//            } else {
+//                side = 'o';
+//            }
 
             try {
-                game.board.move(side, col, row);
-                
+//                game.board.move(side, col, row);
+
                 Referee.connection.send(
-                    $iq({to: from, id: id, type: 'result'}));
+                    $iq({ to: from, id: id, type: 'result' }));
 
                 Referee.connection.send(
                     Referee.muc_msg(game)
-                        .c('body').t(
-                            Strophe.getBareJidFromJid(from) +
-                                ' has placed an ' + side + ' at ' +
-                                col + row).up()
-                        .c('move', {xmlns: Referee.NS_TOETEM,
-                                    col: col,
-                                    row: row}));
+//                        .c('body').t(
+//                            Strophe.getBareJidFromJid(from) +
+//                                ' has placed an ' + side + ' at ' +
+//                                col + row).up()
+                        .c('move', { xmlns: Referee.NS_CAV,
+                            functionName: functionName,
+                            turn: turn,
+                            pokerCards: pokerCards,
+                            picMapping: picMapping,
+                            index1: index1,
+                            index2: index2
+//                            col: col,
+//                            row: row
+                        }));
 
-                $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
-                                  " moved in game " + game.room + ".</p>");
+//                $('#log').prepend("<p>" + Strophe.getBareJidFromJid(from) +
+//                                  " moved in game " + game.room + ".</p>");
 
-                // check for end of game
-                var winner = game.board.gameOver();
-                if (winner) {
-                    if (winner === 'x') {
-                        game.winner = game.x_player;
-                    } else if (winner === 'o') {
-                        game.winner = game.o_player;
-                    }
+//                // check for end of game
+//                var winner = game.board.gameOver();
+//                if (winner) {
+//                    if (winner === 'x') {
+//                        game.winner = game.x_player;
+//                    } else if (winner === 'o') {
+//                        game.winner = game.o_player;
+//                    }
 
-                    Referee.end_game(game, 'finished');
-                }
+//                    Referee.end_game(game, 'finished');
+//                }
             } catch (e) {
                 Referee.send_error(iq, 'cancel', 'not-acceptable');
             }
