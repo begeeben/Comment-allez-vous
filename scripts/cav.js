@@ -149,10 +149,10 @@ var Cav = {
 
         if (cmd === 'move' || cmd === 'game-started') {
             return {
-                functionName: cmdNode.attr('functionName'),
+                functionName: cmdNode.attr('functionname'),
                 turn: cmdNode.attr('turn'),
-                pokerCards: cmdNode.attr('pokerCards').split(' '),
-                picMapping: cmdNode.attr('picMapping').split(' '),
+                pokerCards: cmdNode.attr('pokercards').split(' '),
+                picMapping: cmdNode.attr('picmapping').split(' '),
                 index1: cmdNode.attr('index1'),
                 index2: cmdNode.attr('index2')
             };

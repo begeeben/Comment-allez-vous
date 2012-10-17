@@ -561,10 +561,10 @@ var Referee = {
                 .c('body').t('The match has started.').up()
                 .c('game-started', {
                     xmlns: Referee.NS_CAV,
-                    'functionName': 'game-started',
+                    'functionname': 'game-started',
                     'turn': 1,
-                    'pokerCards': game.player1Cards.join(' '),
-                    'picMapping': game.picMapping.join(' ')
+                    'pokercards': game.player1Cards.join(' '),
+                    'picmapping': game.picMapping.join(' ')
                 }));
 
         // send initial state to player2
@@ -573,10 +573,10 @@ var Referee = {
                .c('body').t('The match has started.').up()
                .c('game-started', {
                    xmlns: Referee.NS_CAV,
-                   'functionName': 'game-started',
+                   'functionname': 'game-started',
                    'turn': 0,
-                   'pokerCards': game.player2Cards.join(' '),
-                   'picMapping': game.picMapping.join(' ')
+                   'pokercards': game.player2Cards.join(' '),
+                   'picmapping': game.picMapping.join(' ')
                }));
 
         //Referee.connection.send(
