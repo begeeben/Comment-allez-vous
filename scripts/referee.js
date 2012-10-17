@@ -555,14 +555,38 @@ var Referee = {
     // send game started and initial state to both users
     start_game: function (game) {
         game.status = 'playing';
+        // send initial state to player1
         Referee.connection.send(
-            Referee.muc_msg(game)
+            $msg({ to: game.player1 })
                 .c('body').t('The match has started.').up()
                 .c('game-started', {
                     xmlns: Referee.NS_CAV,
-                    'player1': game.player1,
-                    'player2': game.player2
+                    'functionName': 'game-started',
+                    'turn': 1,
+                    'pokerCards': game.player1Cards.join(' '),
+                    'picMapping': game.picMapping.join(' ')
                 }));
+
+        // send initial state to player2
+        Referee.connection.send(
+           $msg({ to: game.player2 })
+               .c('body').t('The match has started.').up()
+               .c('game-started', {
+                   xmlns: Referee.NS_CAV,
+                   'functionName': 'game-started',
+                   'turn': 0,
+                   'pokerCards': game.player2Cards.join(' '),
+                   'picMapping': game.picMapping.join(' ')
+               }));
+
+        //Referee.connection.send(
+        //    Referee.muc_msg(game)
+        //        .c('body').t('The match has started.').up()
+        //        .c('game-started', {
+        //            xmlns: Referee.NS_CAV,
+        //            'player1': game.player1,
+        //            'player2': game.player2
+        //        }));
 
         $('#log').prepend("<p>Started game " + game.room + ".</p>");
     },
