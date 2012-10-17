@@ -123,84 +123,80 @@ var Cav = {
             }
 
             // handle game messages
-            var cmdNode = $(message)
-                .find('*[xmlns="' + Cav.NS_CAV + '"]');
-            var cmd = null;
-            var row, col;
-            if (cmdNode.length > 0) {
-                cmd = cmdNode.get(0).tagName;
-            }
-            // convert message to CavMsg and call game function
+            // convert message to CavMsg
+            var cavMsg = Cav.convertGameMessage(message);
+            // call game logic handler
 
-//            if (cmd === 'game-started') {
-//            // when game started
-//                var me = Cav.connection.jid;
-//                Cav.x_player = cmdNode.attr('x-player');
-//                Cav.o_player = cmdNode.attr('o-player');
-//                Cav.turn = 'x';
 
-//                if (Cav.x_player === me) {
-//                    Cav.my_side = 'x';
-//                    $('#board-status').html('Your move...');
-//                } else if (Cav.o_player === me) {
-//                    Cav.my_side = 'o';
-//                    $('#board-status').html("Opponent's move...");
-//                }
+            //            if (cmd === 'game-started') {
+            //            // when game started
+            //                var me = Cav.connection.jid;
+            //                Cav.x_player = cmdNode.attr('x-player');
+            //                Cav.o_player = cmdNode.attr('o-player');
+            //                Cav.turn = 'x';
 
-//                if (!Cav.watching) {
-//                    $('#resign').removeAttr('disabled');
-//                } else {
-//                    $('#leave').removeAttr('disabled');
-//                }
-//            } else if (cmd === 'game-ended') {
-//            // when game ended
-//                $('#resign').attr('disabled', 'disabled');
-//                $('#leave').removeAttr('disabled');
-//                var winner = cmdNode.attr('winner');
-//                if (winner === Cav.connection.jid) {
-//                    $('#board-status').html('You won!');
-//                } else if (winner && !Cav.watching) {
-//                    $('#board-status').html('You lost!');
-//                } else if (!Cav.watching) {
-//                    $('#board-status').html('You tied!');
-//                }
-//            } else if (cmd === 'move') {
-//                var map = { 'a': 0, 'b': 1, 'c': 2, '1': 0, '2': 1, '3': 2 };
-//                col = cmdNode.attr('col');
-//                row = cmdNode.attr('row');
+            //                if (Cav.x_player === me) {
+            //                    Cav.my_side = 'x';
+            //                    $('#board-status').html('Your move...');
+            //                } else if (Cav.o_player === me) {
+            //                    Cav.my_side = 'o';
+            //                    $('#board-status').html("Opponent's move...");
+            //                }
 
-//                Cav.draw_piece(Cav.turn, map[col], map[row]);
+            //                if (!Cav.watching) {
+            //                    $('#resign').removeAttr('disabled');
+            //                } else {
+            //                    $('#leave').removeAttr('disabled');
+            //                }
+            //            } else if (cmd === 'game-ended') {
+            //            // when game ended
+            //                $('#resign').attr('disabled', 'disabled');
+            //                $('#leave').removeAttr('disabled');
+            //                var winner = cmdNode.attr('winner');
+            //                if (winner === Cav.connection.jid) {
+            //                    $('#board-status').html('You won!');
+            //                } else if (winner && !Cav.watching) {
+            //                    $('#board-status').html('You lost!');
+            //                } else if (!Cav.watching) {
+            //                    $('#board-status').html('You tied!');
+            //                }
+            //            } else if (cmd === 'move') {
+            //                var map = { 'a': 0, 'b': 1, 'c': 2, '1': 0, '2': 1, '3': 2 };
+            //                col = cmdNode.attr('col');
+            //                row = cmdNode.attr('row');
 
-//                if (Cav.turn === 'x') {
-//                    Cav.turn = 'o';
-//                } else {
-//                    Cav.turn = 'x';
-//                }
+            //                Cav.draw_piece(Cav.turn, map[col], map[row]);
 
-//                if (!Cav.watching) {
-//                    Cav.my_turn = Cav.turn === Cav.my_side;
+            //                if (Cav.turn === 'x') {
+            //                    Cav.turn = 'o';
+            //                } else {
+            //                    Cav.turn = 'x';
+            //                }
 
-//                    if (Cav.my_turn) {
-//                        $('#board-status').html("Your move...");
-//                    } else {
-//                        $('#board-status').html("Opponent's move...");
-//                    }
-//                }
-//            } else if (cmd === 'game-state') {
-//                var pos = cmdNode.attr('pos');
-//                if (pos) {
-//                    var idx = 0;
-//                    for (row = 0; row < 3; row++) {
-//                        for (col = 0; col < 3; col++) {
-//                            if (pos[idx] !== ' ') {
-//                                Cav.draw_piece(pos[idx], col, row);
-//                            }
+            //                if (!Cav.watching) {
+            //                    Cav.my_turn = Cav.turn === Cav.my_side;
 
-//                            idx += 1;
-//                        }
-//                    }
-//                }
-//            }
+            //                    if (Cav.my_turn) {
+            //                        $('#board-status').html("Your move...");
+            //                    } else {
+            //                        $('#board-status').html("Opponent's move...");
+            //                    }
+            //                }
+            //            } else if (cmd === 'game-state') {
+            //                var pos = cmdNode.attr('pos');
+            //                if (pos) {
+            //                    var idx = 0;
+            //                    for (row = 0; row < 3; row++) {
+            //                        for (col = 0; col < 3; col++) {
+            //                            if (pos[idx] !== ' ') {
+            //                                Cav.draw_piece(pos[idx], col, row);
+            //                            }
+
+            //                            idx += 1;
+            //                        }
+            //                    }
+            //                }
+            //            }
         }
 
         return true;
@@ -209,56 +205,75 @@ var Cav = {
     scroll_chat: function () {
         var div = $('#messages').get(0);
         div.scrollTop = div.scrollHeight;
+    },
+
+    // convert XMPP game logic message stanza to CavMsg
+    convertGameMessage: function (message) {
+        var cmdNode = $(message)
+                .find('*[xmlns="' + Cav.NS_CAV + '"]');
+        var cmd = null;
+        var row, col;
+        if (cmdNode.length > 0) {
+            cmd = cmdNode.get(0).tagName;
+        }
+
+        return {
+            functionName: cmd
+        };
+    },
+
+    // convert CavMsg to XMPP iq stanza and send it to the server
+    submitMovement: function (cavMsg) {
     }
 
-//    draw_board: function () {
-//        var ctx = $('#board')[0].getContext('2d');
+    //    draw_board: function () {
+    //        var ctx = $('#board')[0].getContext('2d');
 
-//        // clear board
-//        ctx.fillStyle = '#000';
-//        ctx.beginPath();
-//        ctx.fillRect(0, 0, 300, 300);
+    //        // clear board
+    //        ctx.fillStyle = '#000';
+    //        ctx.beginPath();
+    //        ctx.fillRect(0, 0, 300, 300);
 
-//        // draw grid lines
-//        ctx.strokeStyle = '#999';
-//        ctx.lineWidth = 4;
+    //        // draw grid lines
+    //        ctx.strokeStyle = '#999';
+    //        ctx.lineWidth = 4;
 
-//        ctx.beginPath();
+    //        ctx.beginPath();
 
-//        ctx.moveTo(100, 10);
-//        ctx.lineTo(100, 290);
-//        ctx.moveTo(200, 10);
-//        ctx.lineTo(200, 290);
-//        ctx.moveTo(10, 100);
-//        ctx.lineTo(290, 100);
-//        ctx.moveTo(10, 200);
-//        ctx.lineTo(290, 200);
+    //        ctx.moveTo(100, 10);
+    //        ctx.lineTo(100, 290);
+    //        ctx.moveTo(200, 10);
+    //        ctx.lineTo(200, 290);
+    //        ctx.moveTo(10, 100);
+    //        ctx.lineTo(290, 100);
+    //        ctx.moveTo(10, 200);
+    //        ctx.lineTo(290, 200);
 
-//        ctx.stroke();
-//    },
+    //        ctx.stroke();
+    //    },
 
-//    draw_piece: function (piece, x, y) {
-//        var ctx = $('#board')[0].getContext('2d');
+    //    draw_piece: function (piece, x, y) {
+    //        var ctx = $('#board')[0].getContext('2d');
 
-//        ctx.strokeStyle = '#fff';
+    //        ctx.strokeStyle = '#fff';
 
-//        var center_x = (x * 100) + 50;
-//        var center_y = (y * 100) + 50;
+    //        var center_x = (x * 100) + 50;
+    //        var center_y = (y * 100) + 50;
 
-//        ctx.beginPath();
+    //        ctx.beginPath();
 
-//        if (piece === 'x') {
-//            ctx.moveTo(center_x - 15, center_y - 15);
-//            ctx.lineTo(center_x + 15, center_y + 15);
+    //        if (piece === 'x') {
+    //            ctx.moveTo(center_x - 15, center_y - 15);
+    //            ctx.lineTo(center_x + 15, center_y + 15);
 
-//            ctx.moveTo(center_x + 15, center_y - 15);
-//            ctx.lineTo(center_x - 15, center_y + 15);
-//        } else {
-//            ctx.arc(center_x, center_y, 15, 0, 2 * Math.PI, true);
-//        }
+    //            ctx.moveTo(center_x + 15, center_y - 15);
+    //            ctx.lineTo(center_x - 15, center_y + 15);
+    //        } else {
+    //            ctx.arc(center_x, center_y, 15, 0, 2 * Math.PI, true);
+    //        }
 
-//        ctx.stroke();
-//    }
+    //        ctx.stroke();
+    //    }
 };
 
 $(document).ready(function () {
@@ -354,20 +369,20 @@ $(document).ready(function () {
         $('#browser').show();
     });
 
-    $('#board').click(function (ev) {
-        if (Cav.turn && Cav.turn === Cav.my_side) {
-            var pos = $(this).position();
-            var x = Math.floor((ev.pageX - pos.left) / 100);
-            var y = Math.floor((ev.pageY - pos.top) / 100);
+//    $('#board').click(function (ev) {
+//        if (Cav.turn && Cav.turn === Cav.my_side) {
+//            var pos = $(this).position();
+//            var x = Math.floor((ev.pageX - pos.left) / 100);
+//            var y = Math.floor((ev.pageY - pos.top) / 100);
 
-            Cav.connection.sendIQ(
-                $iq({ to: Cav.referee, type: 'set' })
-                    .c('move', { xmlns: Cav.NS_CAV,
-                        col: ['a', 'b', 'c'][x],
-                        row: y + 1
-                    }));
-        }
-    });
+//            Cav.connection.sendIQ(
+//                $iq({ to: Cav.referee, type: 'set' })
+//                    .c('move', { xmlns: Cav.NS_CAV,
+//                        col: ['a', 'b', 'c'][x],
+//                        row: y + 1
+//                    }));
+//        }
+//    });
 });
 
 $(document).bind('connect', function (ev, data) {
