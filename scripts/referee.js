@@ -506,7 +506,7 @@ var Referee = {
     muc_msg: function (game) {
         return $msg({ to: Referee.game_room(game.room), type: "groupchat" });
     },
-
+    // send game started and initial state to both users
     start_game: function (game) {
         game.status = 'playing';
         Referee.connection.send(
