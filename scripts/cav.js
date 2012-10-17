@@ -4,8 +4,8 @@ var Cav = {
     NS_CAV: "https://github.com/begeeben/Comment-allez-vous",
     NS_MUC: "http://jabber.org/protocol/muc",
     game: null,
-    x_player: null,
-    o_player: null,
+    player1: null,
+    player2: null,
     turn: null,
     my_side: null,
     watching: false,
@@ -41,13 +41,13 @@ var Cav = {
         } else if ($(message).find('games').length > 0) {
             // received current playing game list
             $(message).find('games > game').each(function () {
-                if ($(this).attr('x-player') !== Cav.connection.jid &&
-                    $(this).attr('o-player') !== Cav.connection.jid) {
+                if ($(this).attr('player1') !== Cav.connection.jid &&
+                    $(this).attr('player2') !== Cav.connection.jid) {
                     $('#games tbody').append(
                         "<tr><td>" +
-                            $(this).attr('x-player') +
+                            $(this).attr('player1') +
                             "</td><td>" +
-                            $(this).attr('o-player') +
+                            $(this).attr('player2') +
                             "</td><td class='jid'>" +
                             $(this).attr('room') +
                             "</td><td>" +
