@@ -5,7 +5,7 @@ var Referee = {
     waiting: [],
     presence: {},
 
-    NS_TOETEM: "http://metajack.im/ns/toetem",
+    NS_TOETEM: "https://github.com/begeeben/Comment-allez-vous",
     NS_MUC: "http://jabber.org/protocol/muc",
     NS_MUC_USER: "http://jabber.org/protocol/muc#user",
     NS_MUC_OWNER: "http://jabber.org/protocol/muc#owner",
