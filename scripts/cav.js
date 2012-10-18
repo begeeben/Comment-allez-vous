@@ -149,12 +149,12 @@ var Cav = {
 
         if (cmd === 'move' || cmd === 'game-started') {
             return {
-                functionName: cmdNode.attr('functionname'),
-                turn: cmdNode.attr('turn'),
-                pokerCards: cmdNode.attr('pokercards').split(' '),
-                picMapping: cmdNode.attr('picmapping').split(' '),
-                index1: cmdNode.attr('index1'),
-                index2: cmdNode.attr('index2')
+                FunctionName: cmdNode.attr('functionname'),
+                Turn: cmdNode.attr('turn'),
+                PokerCards: cmdNode.attr('pokercards').split(' '),
+                PicMapping: cmdNode.attr('picmapping').split(' '),
+                Index1: cmdNode.attr('index1'),
+                Index2: cmdNode.attr('index2')
             };
         }
         else {
@@ -167,12 +167,12 @@ var Cav = {
         Cav.connection.sendIQ($iq({ to: Cav.referee, type: 'set' })
                             .c('move', {
                                 xmlns: Cav.NS_CAV,
-                                functionName: cavMsg.functionName,
-                                turn: cavMsg.turn,
-                                pokerCards: cavMsg.pokerCards.join(' '),
-                                picMapping: cavMsg.picMapping.join(' '),
-                                index1: cavMsg.index1,
-                                index2: cavMsg.index2
+                                FunctionName: cavMsg.FunctionName,
+                                Turn: cavMsg.Turn,
+                                PokerCards: cavMsg.PokerCards.join(' '),
+                                PicMapping: cavMsg.PicMapping.join(' '),
+                                Index1: cavMsg.Index1,
+                                Index2: cavMsg.Index2
                             }));
     }
 
