@@ -39,6 +39,12 @@
       data.env = envUrl;
     }
 
-  return $.get(url, data, callback, "json");
+    return $.ajax({
+        async: false,
+        url: url,
+        data: data,
+        dataType: type,
+        success: callback
+    });
   };
 }(jQuery));
