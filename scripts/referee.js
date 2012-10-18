@@ -443,8 +443,6 @@ var Referee = {
         };
         // deal cards
         Referee.dealCards(newGame);
-        // get card picture urls
-        Referee.getPictures(newGame);
 
         return newGame;
     },
@@ -555,40 +553,57 @@ var Referee = {
     // send game started and initial state to both users
     start_game: function (game) {
         game.status = 'playing';
-        // send initial state to player1
-        Referee.connection.send(
-            $msg({ to: game.player1 })
-                .c('body').t('The match has started.').up()
-                .c('game-started', {
-                    xmlns: Referee.NS_CAV,
-                    'functionname': 'GameStarted',
-                    'turn': 1,
-                    'pokercards': game.player1Cards.join(' '),
-                    'picmapping': game.picMapping.join(' ')
-                }));
+        // get card picture urls
+        Referee.Picture.getPicUrls(function (data) {
 
-        // send initial state to player2
-        Referee.connection.send(
-           $msg({ to: game.player2 })
-               .c('body').t('The match has started.').up()
-               .c('game-started', {
-                   xmlns: Referee.NS_CAV,
-                   'functionname': 'GameStarted',
-                   'turn': 0,
-                   'pokercards': game.player2Cards.join(' '),
-                   'picmapping': game.picMapping.join(' ')
-               }));
+            Referee.shuffle(data.query.results.img);
+            //alert(1);
+            var i = 1;
+            $.each(data.query.results.img, function () {
+                if (i < 14) {
+                    game.picMapping[i] = this.src;
+                    i++;
+                }
+                else {
+                    return false;
+                }
+            });
 
-        //Referee.connection.send(
-        //    Referee.muc_msg(game)
-        //        .c('body').t('The match has started.').up()
-        //        .c('game-started', {
-        //            xmlns: Referee.NS_CAV,
-        //            'player1': game.player1,
-        //            'player2': game.player2
-        //        }));
+            // send initial state to player1
+            Referee.connection.send(
+                $msg({ to: game.player1 })
+                    .c('body').t('The match has started.').up()
+                    .c('game-started', {
+                        xmlns: Referee.NS_CAV,
+                        'functionname': 'GameStarted',
+                        'turn': 1,
+                        'pokercards': game.player1Cards.join(' '),
+                        'picmapping': game.picMapping.join(' ')
+                    }));
 
-        $('#log').prepend("<p>Started game " + game.room + ".</p>");
+            // send initial state to player2
+            Referee.connection.send(
+               $msg({ to: game.player2 })
+                   .c('body').t('The match has started.').up()
+                   .c('game-started', {
+                       xmlns: Referee.NS_CAV,
+                       'functionname': 'GameStarted',
+                       'turn': 0,
+                       'pokercards': game.player2Cards.join(' '),
+                       'picmapping': game.picMapping.join(' ')
+                   }));
+
+            //Referee.connection.send(
+            //    Referee.muc_msg(game)
+            //        .c('body').t('The match has started.').up()
+            //        .c('game-started', {
+            //            xmlns: Referee.NS_CAV,
+            //            'player1': game.player1,
+            //            'player2': game.player2
+            //        }));
+
+            $('#log').prepend("<p>Started game " + game.room + ".</p>");
+        });
     },
 
     end_game: function (game, status) {

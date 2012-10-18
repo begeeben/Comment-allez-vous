@@ -40,6 +40,7 @@
     }
 
     return $.ajax({
+        type: 'GET',
         async: false,
         url: url,
         data: data,
