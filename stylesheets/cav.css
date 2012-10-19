@@ -43,6 +43,8 @@ input.button
 
 #board-area
 {
+    width:1000px;
+    height:600px;
     float: left;
 }
 
@@ -89,4 +91,41 @@ input.button
     border-radius: 10px 10px 10px 10px;
     margin: 10px;
     padding: 10px;
+}
+
+.Poker {
+    border: solid 1px #000000;
+    background-color: #facef2;
+    width: 180px;
+    height: 250px;
+    margin: 5px;
+    position: absolute;
+}
+
+.Poker.PokerBack {
+    background-image:url();
+}
+
+.Poker.DeckPosition
+{
+	top:235px;
+	left:825px;
+}
+
+.Poker.HandCardPosition {
+    top:325px;
+}
+
+.Poker .Beauty
+{
+	background-color:transparent;
+    background-size:100%;
+    background-repeat:no-repeat;
+    background-position-x:center;
+    background-position-y:center;
+	width:120px;
+	height:180px;
+	position:relative;
+    top:35px;
+    left:30px;
 }

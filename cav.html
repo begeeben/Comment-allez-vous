@@ -10,6 +10,8 @@
     <script src='scripts/strophe.flxhr.js'></script>-->
     <link rel='stylesheet' href='stylesheets/cav.css'>
     <script src='scripts/cav.js'></script>
+    <script src="scripts/mustache.js"></script>
+    <script src="scripts/cav.game.js"></script>
 </head>
 <body>
     <div id='header'>
@@ -73,8 +75,6 @@
             <input id='leave' class='button' type='button' value='leave' disabled='disabled'>
         </div>
         <div id='board-area'>
-            <canvas id='board'>
-            </canvas>
             <div id='board-status'>
             </div>
         </div>
@@ -92,6 +92,15 @@
             Password:</label><input type='password' id='password'>
         <label>
             CAV Referee</label><input type='text' id='referee'>
+    </div>
+    <div id="HandCardTemplate" style="display:none;">
+        <div class="Poker DeckPosition" id="{{Id}}">
+            <div id="Pic" class="Beauty" style="background-image:url({{ImgUrl}})">
+                <!--<div>Id : {{Id}}</div>
+                <div>No : {{No}}</div>
+                <div>Suit : {{Suit}}</div>-->
+            </div>
+        </div>
     </div>
 </body>
 </html>

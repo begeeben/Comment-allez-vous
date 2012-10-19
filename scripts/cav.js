@@ -126,7 +126,7 @@ var Cav = {
             // convert message to CavMsg
             var cavMsg = Cav.convertGameMessage(message);
             // call game logic handler
-
+            Cav.GameController.Switch(cavMsg);
 
         }
 
