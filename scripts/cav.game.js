@@ -50,30 +50,57 @@ Cav.GameController = {
             if (p2CardLength != 14 && i == 0) {
                 //如果對手牌數不為14則第一回發牌不發對手的牌
             } else {
-                var emptyPokerHtml = Mustache.to_html(pokerTemplate, new Object()).replace(/^\s*/mg, '');
-                var emptyPoker = $(emptyPokerHtml).appendTo("#" + Cav.BoardAreaId).css("z-index", i).animate({ left: p2PositionX, top: Cav.P2HandCardBasicPosition.Y }, delayTime);
+                $(document.createElement("div")).appendTo("#" + Cav.BoardAreaId)
+                    .cavPoker({
+                        Id: -1,
+                        No: -1,
+                        Suit: -1,
+                        handCard: false,
+                        pokerTemplate: pokerTemplate,
+                        zIndex: i + 1,
+                        left: Cav.DeckPosition.X,
+                        top: Cav.DeckPosition.Y
+                    }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
+
                 delayTime += Cav.DealSpeed;
                 p2PositionX += ($(".Poker")[0].offsetWidth / 3);
             }
 
             var id = cavMsg.PokerCards[i];
             var card = Cav.PokerSource[id];
-            card.ImgUrl = cavMsg.PicMapping[card.No];
-            var pokerHtml = Mustache.to_html(pokerTemplate, card).replace(/^\s*/mg, '');
 
-            var poker = $(pokerHtml).appendTo("#" + Cav.BoardAreaId)
-                .css("z-index", i)
-                .css("left", Cav.DeckPosition.X)
-                .css("top", Cav.DeckPosition.Y)
-                .animate({ left: positionX, top: Cav.HandCardBasicPosition.Y }, delayTime);
+            $(document.createElement("div")).appendTo("#" + Cav.BoardAreaId)
+                .cavPoker({
+                    Id: card.Id,
+                    No: card.No,
+                    Suit: card.Suit,
+                    handCard: true,
+                    ImgUrl: cavMsg.PicMapping[card.No],
+                    pokerTemplate: pokerTemplate,
+                    zIndex: i + 1,
+                    left: Cav.DeckPosition.X,
+                    top: Cav.DeckPosition.Y
+                }).cavPokerMoveTo(positionX, Cav.HandCardBasicPosition.Y, delayTime, function () {
+                    $(this).cavPockerUnlock();
+                });
 
             delayTime += Cav.DealSpeed;
             positionX += ($(".Poker")[0].offsetWidth / 3);
 
             if (p2CardLength == 14 && i == 12) {
                 //如果對手牌數為14則多發一張
-                var emptyPokerHtml = Mustache.to_html(pokerTemplate, new Object()).replace(/^\s*/mg, '');
-                var emptyPoker = $(emptyPokerHtml).appendTo("#" + Cav.BoardAreaId).css("z-index", i).animate({ left: p2PositionX, top: Cav.P2HandCardBasicPosition.Y }, delayTime);
+                $(document.createElement("div")).appendTo("#" + Cav.BoardAreaId)
+                    .cavPoker({
+                        Id: -1,
+                        No: -1,
+                        Suit: -1,
+                        handCard: false,
+                        pokerTemplate: pokerTemplate,
+                        zIndex: i + 1,
+                        left: Cav.DeckPosition.X,
+                        top: Cav.DeckPosition.Y
+                    }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
+
                 delayTime += Cav.DealSpeed;
                 p2PositionX += ($(".Poker")[0].offsetWidth / 3);
             }
