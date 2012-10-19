@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Comment-allez-vous</title>
+    <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/cupertino/jquery-ui.css'>
+   <!-- <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js'></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js'></script>-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+    <script src='scripts/strophe.js'></script>
+    <!--<script src='scripts/flXHR.js'></script>
+    <script src='scripts/strophe.flxhr.js'></script>-->
+    <link rel='stylesheet' href='stylesheets/cav.css'>
+    <script src="scripts/jquery.cavPoker.js"></script>
+    <script src='scripts/cav.js'></script>
+    <script src="scripts/cav.main.js"></script>
+    <script src="scripts/mustache.js"></script>
+    <script src="scripts/cav.game.js"></script>
+</head>
+<body>
+    <div id="page-container">
+        <div id='header'>
+            <h1>Comment-allez-vous</h1>
+        </div>
+        <div id='browser'>
+            <div class='buttons'>
+                <input id='disconnect' class='button' type='button' value='disconnect' disabled='disabled'>
+                <input id='wait' class='button' type='button' value='wait' disabled='disabled'>
+                <!--test CavMsg conversion-->
+                <!--<input id='sendCavMsg' class='button' type='button' value='sendCavMsg' />
+                <input id='getCavMsg' class='button' type='button' value='getCavMsg' />
+                <div id='testResult'></div>-->
+                <!---->
+                <!--test CavMsg conversion-->
+                <input id='sendCavMsg' class='button' type='button' value='sendCavMsg' />
+                <input id='getCavMsg' class='button' type='button' value='getCavMsg' />
+                <!---->
+            </div>
+            <div id='players' class='block'>
+                <h2>Players Available</h2>
+                <table id='waiting'>
+                    <thead>
+                        <tr>
+                            <th>Player
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div id='rooms' class='block'>
+                <h2>Games In Progress</h2>
+                <table id='games'>
+                    <thead>
+                        <tr>
+                            <th>Player 1
+                            </th>
+                            <th>Player 2
+                            </th>
+                            <th>Room
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id='game' class='hidden'>
+            <div class='buttons'>
+                <input id='resign' class='button' type='button' value='resign' disabled='disabled'>
+                <input id='leave' class='button' type='button' value='leave' disabled='disabled'>
+            </div>
+            <div id='board-area'>
+                <div id='board-status'>
+                </div>
+                <div class="DeckPosition Poker" >
+                </div>
+            </div>
+            <div id='chat' class='block'>
+                <div id='messages'>
+                </div>
+                <input type='text' id='input'>
+            </div>
+        </div>
+        <!-- login dialog -->
+        <div id='login_dialog' class='hidden'>
+            <div>
+                amy.yu@jabber.org<br />
+                eric.tsao.jr@jabber.org
+            </div>
+            <label>
+                JID:</label><input type='text' id='jid'>
+            <label>
+                Password:</label><input type='password' id='password' value="yahoohacker">
+            <label>
+                CAV Referee</label><input type='text' id='referee'>
+        </div>
+        <div id="HandCardTemplate" style="display: none;">
+            <div class="Poker DeckPosition" id="{{Id}}">
+                <div id="Pic" class="Beauty" style="background-image: url({{ImgUrl}})">
+                    <!--<div>Id : {{Id}}</div>
+                <div>No : {{No}}</div>
+                <div>Suit : {{Suit}}</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

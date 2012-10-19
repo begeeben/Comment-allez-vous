@@ -10,7 +10,7 @@
 */
 
 Strophe.addConnectionPlugin('flxhr', {
-    init: function (conn) {
+    init: function () {
         // replace Strophe.Request._newXHR with new flXHR version
         // if flXHR is detected
         if (flensed && flensed.flXHR) {
@@ -18,13 +18,8 @@ Strophe.addConnectionPlugin('flxhr', {
                 var xhr = new flensed.flXHR({
                     autoUpdatePlayer: true,
                     instancePooling: true,
-                    noCacheHeader: false,
-                    onerror: function () {
-                        conn._changeConnectStatus(Strophe.Status.CONNFAIL,
-                                                  "flXHR connection error");
-                        conn._onDisconnectTimeout();
-                    }});
-                xhr.onreadystatechange = this.func.bind(null, this);
+                    noCacheHeader: false});
+                xhr.onreadystatechange = this.func.prependArg(this);
 
                 return xhr;
             };
