@@ -12,6 +12,9 @@ Cav.GameController = {
         this[cavMsg.FunctionName](cavMsg);
     },
     GameStarted: function (cavMsg) {
+
+        Cav.GameController.HandCards = cavMsg.PokerCards;
+
         //依據BoardArea的大小及位置決定 發牌的起始位置
         Cav.P2HandCardBasicPosition.X = $("#" + Cav.BoardAreaId).offset().left;
         Cav.P2HandCardBasicPosition.Y = $("#" + Cav.BoardAreaId).offset().top;
@@ -76,4 +79,173 @@ Cav.GameController = {
             }
         }
     }
+};
+
+// 送出訊息-------------------------------
+Cav.GameController.ReadyToBePicked = function () {
+    Cav.submitMovement({
+        FunctionName: 'OpponentReady',
+        Turn: null,
+        PokerCards: [],
+        PicMapping: [],
+        Index1: null,
+        Index2: null
+    });
+};
+
+Cav.GameController.PickCard = function (index) {
+    Cav.submitMovement({
+        FunctionName: 'ReceivedPickCard',
+        Turn: null,
+        PokerCards: [],
+        PicMapping: [],
+        Index1: index,
+        Index2: null
+    });
+};
+
+Cav.GameController.ConfirmPickCard = function (index) {
+    Cav.submitMovement({
+        FunctionName: 'ReceivedConfirmPickCard',
+        Turn: null,
+        PokerCards: [],
+        PicMapping: [],
+        Index1: index,
+        Index2: null
+    });
+};
+
+// 牌被抽了之後送出
+Cav.GameController.SendPickedCard = function (index, cardId) {
+    Cav.submitMovement({
+        FunctionName: 'ReceivedCard',
+        Turn: null,
+        PokerCards: [cardId],
+        PicMapping: [],
+        Index1: index,
+        Index2: null
+    });
+
+};
+
+Cav.GameController.SwapCards = function (index1, index2) {
+    // 抽出插入的理牌方式...不要想歪
+    //var temp = Cav.GameController.HandCards.splice(index1, 1);
+    //Cav.GameController.HandCards.splice(index2, 0, temp);
+
+    // 單純swap
+    var temp = Cav.GameController.HandCards[index1];
+    Cav.GameController.HandCards[index1] = Cav.GameController.HandCards[index2];
+    Cav.GameController.HandCards[index2] = Cav.GameController.HandCards[index1];
+
+    Cav.submitMovement({
+        FunctionName: 'ReceivedSwap',
+        Turn: null,
+        PokerCards: [],
+        PicMapping: [],
+        Index1: index1,
+        Index2: index2
+    });
+};
+
+// 清牌, 成功return true
+Cav.GameController.DumpMatchedCards = function (index1, index2) {
+
+    // 判斷牌有沒有成對
+    if (abs(Cav.GameController.HandCards[index1] - Cav.GameController.HandCards[index2]) === 13) {
+        if (index1 > index2) {
+            Cav.GameController.HandCards.splice(index1, 1);
+            Cav.GameController.HandCards.splice(index2, 1);
+        }
+        else {
+            Cav.GameController.HandCards.splice(index2, 1);
+            Cav.GameController.HandCards.splice(index1, 1);
+        }
+
+        Cav.submitMovement({
+            FunctionName: 'ReceivedDump',
+            Turn: null,
+            PokerCards: [Cav.GameController.HandCards[index1], Cav.GameController.HandCards[index2]],
+            PicMapping: [],
+            Index1: index1,
+            Index2: index2
+        });
+
+        if (Cav.GameController.HandCards.length === 0) {
+            Cav.Winning();
+        }
+
+        return true;
+    }
+    else {
+        return false;
+    }
+};
+
+// 獲勝時送出
+Cav.GameController.Winning = function () {
+    Cav.submitMovement({
+        FunctionName: 'YouLose',
+        Turn: null,
+        PokerCards: [],
+        PicMapping: [],
+        Index1: null,
+        Index2: null
+    });
+
+    // call獲勝動畫
+
+};
+
+//--------------------------------------------------------
+
+// 接收訊息-------------------------------------
+Cav.GameController.OpponentReady = function () {
+    // 通知本機可以抽牌了
+
+};
+
+Cav.GameController.ReceivedPickCard = function (cavMsg) {
+    $(".HandCard").eq(cavMsg.Index1).cavPokerMoveUp();
+};
+
+// 被抽走一張
+Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
+
+    //$(".HandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+
+    var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
+
+    Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
+
+    if (Cav.GameController.HandCards.length === 0) {
+        Cav.Winning();
+    }
+};
+
+// 拿到抽到的牌
+Cav.GameController.ReceivedCard = function (cavMsg) {
+
+    Cav.GameController.HandCards.push(cavMsg.PokerCards[0]);
+
+    // 抽到牌的動畫
+    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+};
+
+// 收到對方交換牌的位置
+Cav.GameController.ReceivedSwap = function (cavMsg) {
+    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+};
+
+// 收到對方清掉的牌
+Cav.GameController.ReceivedDump = function (cavMsg) {
+
+    // 對方清掉牌的動畫
+    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+
+};
+
+Cav.GameController.YouLose = function () {
+    // call輸了的動畫
+   
 };
