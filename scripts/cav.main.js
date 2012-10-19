@@ -55,12 +55,10 @@ $(document).ready(function () {
 
     // test show/hide
     $('#show').click(function () {
-        Cav.Animation.showWaitingList();
-        Cav.Animation.showGameList();
+        Cav.Animation.showWaitingList(Cav.Animation.showGameList());
     });
     $('#hide').click(function () {
-        Cav.Animation.hideWaitingList();
-        Cav.Animation.hideGameList();
+        Cav.Animation.hideGameList(Cav.Animation.hideWaitingList());
     });
 
     $('input.stop_button').live('click', function () {
@@ -168,8 +166,8 @@ $(document).bind('connected', function () {
     $('#disconnect').removeAttr('disabled');
     $('#wait').removeAttr('disabled');
 
-    Cav.Animation.showWaitingList();
-    Cav.Animation.showGameList();
+    Cav.Animation.showWaitingList(
+    Cav.Animation.showGameList());
 
     Cav.connection.addHandler(Cav.on_message, null, "message");
 
@@ -183,8 +181,7 @@ $(document).bind('disconnected', function () {
     Cav.referee = null;
     Cav.connection = null;
 
-    Cav.Animation.hideGameList();
-    Cav.Animation.hideWaitingList();
+    Cav.Animation.hideGameList(Cav.Animation.hideWaitingList());
     $('#waiting tbody').empty();
     $('#games tbody').empty();
 

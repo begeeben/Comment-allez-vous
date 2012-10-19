@@ -4,9 +4,9 @@
     delay: 550,
     effectType: 'drop',
 
-    hideWaitingList: function () {
+    hideWaitingList: function (callback) {
 
-        $('#players').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
+        $('#players').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration, callback);
         //var $that = $('#players');
 
         //$that.css({ position: 'absolute', top: 0 })
@@ -19,9 +19,9 @@
         //        });
     },
 
-    showWaitingList: function () {
+    showWaitingList: function (callback) {
 
-        $('#players').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
+        $('#players').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration, callback);
         //var $that = $('#players');
 
         //$that.removeClass('empty')
@@ -31,28 +31,28 @@
         //        .animate({ left: '-=640', opacity: 1 }, animationDuration);
     },
 
-    hideGameList: function () {
-        $('#rooms').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
+    hideGameList: function (callback) {
+        $('#rooms').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration, callback);
     },
 
-    showGameList: function () {
-        $('#rooms').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
+    showGameList: function (callback) {
+        $('#rooms').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration, callback);
     },
 
-    hideChat: function () {
-        $('#chat').hide('drop', {}, Cav.Animation.animationDuration);
+    hideChat: function (callback) {
+        $('#chat').hide('drop', {}, Cav.Animation.animationDuration, callback);
     },
 
-    showChat: function () {
-        $('#chat').show('drop', {}, Cav.Animation.animationDuration);
+    showChat: function (callback) {
+        $('#chat').show('drop', {}, Cav.Animation.animationDuration, callback);
     },
 
-    hideLoginDialog: function () {
-        $('#login_dialog').hide('drop', {}, Cav.Animation.animationDuration);
+    hideLoginDialog: function (callback) {
+        $('#login_dialog').hide('drop', {}, Cav.Animation.animationDuration, callback);
     },
 
-    showLoginDialog: function () {
-        $('#login_dialog').show('drop', {}, Cav.Animation.animationDuration);
+    showLoginDialog: function (callback) {
+        $('#login_dialog').show('drop', {}, Cav.Animation.animationDuration, callback);
     }
 
 };
