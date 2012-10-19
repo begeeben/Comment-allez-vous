@@ -14,6 +14,12 @@ body
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00a03a', endColorstr='#006028',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+#page-container
+{
+    width: 960px;
+    margin: 5px auto;
+}
+
 h1
 {
     text-align: center;
@@ -91,6 +97,7 @@ input.button
     border-radius: 10px 10px 10px 10px;
     margin: 10px;
     padding: 10px;
+    box-shadow: 4px 4px 5px #000;
 }
 
 .Poker {
