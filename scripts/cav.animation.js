@@ -2,7 +2,7 @@
 
     animationDuration: 600,
     delay: 550,
-    effectType: 'fold',
+    effectType: 'drop',
 
     hideWaitingList: function () {
 

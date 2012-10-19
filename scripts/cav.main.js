@@ -168,6 +168,9 @@ $(document).bind('connected', function () {
     $('#disconnect').removeAttr('disabled');
     $('#wait').removeAttr('disabled');
 
+    Cav.Animation.showWaitingList();
+    Cav.Animation.showGameList();
+
     Cav.connection.addHandler(Cav.on_message, null, "message");
 
     // tell the referee we're online
@@ -180,6 +183,8 @@ $(document).bind('disconnected', function () {
     Cav.referee = null;
     Cav.connection = null;
 
+    Cav.Animation.hideGameList();
+    Cav.Animation.hideWaitingList();
     $('#waiting tbody').empty();
     $('#games tbody').empty();
 
