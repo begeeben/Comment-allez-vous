@@ -2,10 +2,11 @@
 
     animationDuration: 600,
     delay: 550,
+    effectType: 'fold',
 
     hideWaitingList: function () {
 
-        $('#players').hide('drop', {}, Cav.Animation.animationDuration);
+        $('#players').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
         //var $that = $('#players');
 
         //$that.css({ position: 'absolute', top: 0 })
@@ -20,7 +21,7 @@
 
     showWaitingList: function () {
 
-        $('#players').show('drop', {}, Cav.Animation.animationDuration);
+        $('#players').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
         //var $that = $('#players');
 
         //$that.removeClass('empty')
@@ -31,11 +32,11 @@
     },
 
     hideGameList: function () {
-        $('#rooms').hide('drop', {}, Cav.Animation.animationDuration);
+        $('#rooms').hide(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
     },
 
     showGameList: function () {
-        $('#rooms').show('drop', {}, Cav.Animation.animationDuration);
+        $('#rooms').show(Cav.Animation.effectType, {}, Cav.Animation.animationDuration);
     },
 
     hideChat: function () {
