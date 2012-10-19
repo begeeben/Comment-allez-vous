@@ -1,4 +1,9 @@
-﻿$(document).ready(function () {
+﻿$(function () {
+    $('#players').hide();
+    $('#rooms').hide();
+});
+
+$(document).ready(function () {
     $('#login_dialog').dialog({
         autoOpen: true,
         draggable: false,
@@ -47,6 +52,16 @@
     //    var testCav = Cav.convertGameMessage("<message to='elizabeth@longbourn.lit/sitting_room' from='toetem-789@games.pemberley.lit/referee' type='groupchat'><move xmlns='https://github.com/begeeben/Comment-allez-vous' functionName='test' turn=1 pokerCards='1 2' picMapping='http://google.com http://yahoo.com' index1=3 index2=2/></message>");
     //    return true;
     //});
+
+    // test show/hide
+    $('#show').click(function () {
+        Cav.Animation.showWaitingList();
+        Cav.Animation.showGameList();
+    });
+    $('#hide').click(function () {
+        Cav.Animation.hideWaitingList();
+        Cav.Animation.hideGameList();
+    });
 
     $('input.stop_button').live('click', function () {
         Cav.connection.sendIQ(
