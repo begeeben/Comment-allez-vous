@@ -48,7 +48,13 @@
 			},
 
 			cavPokerTurnToFront: function (imgUrl) {
+			    var op = $(t).offset();
+			    var ow = $(t).width();
+			    var oh = $(t).height();
 
+			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80);
+			    $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
+			    $(t).removeClass("OppHandCard").addClass("HandCard").find(".Beauty").css("background-image", "url(" + imgUrl + ")");
 			},
 
 			dragStart: function (e) {
@@ -100,6 +106,13 @@
 
 			            tp.animate({ "z-index": "+=100" }, 10).animate({ top: oSet.top - 5, left: oSet.left - 5 }, 1000).animate({ "z-index": oz }, 10);
 			            op.animate({ "z-index": "+=100" }, 10).animate({ top: tSet.top - 5, left: tSet.left - 5 }, 1000).animate({ "z-index": tz }, 10);
+
+			            var tmpFlag = document.createElement("div");
+			            $(tmpFlag).hide();
+			            op.after($(tmpFlag));
+			            tp.after(op);
+			            $(tmpFlag).after(tp);
+			            $(tmpFlag).remove();
 			        } else if (document.clearPokerFlag) {
 			            var oCard = $(".HandCard").eq(document.dragPokerIndex);
 			            var index = $(".HandCard").index(oCard);
@@ -191,7 +204,7 @@
 	$(document).ready(function () {
 		docloaded = true
 	});
-
+     
 	$.fn.cavPoker = function (p) {
 		return this.each(function () {
 			if (!docloaded) {
@@ -229,7 +242,7 @@
 	        if (this.cav) alert("cavPokerSwap");
 	    });
 	};
-	$.fn.cavPokerTurnToFront = function () {
+	$.fn.cavPokerTurnToFront = function (imgUrl) {
 	    return this.each(function () {
 	        if (this.cav) this.cav.cavPokerTurnToFront(imgUrl);
 	    });
