@@ -9,6 +9,7 @@ var Cav = {
     turn: null,
     my_side: null,
     watching: false,
+    opponent: null,
 
     on_message: function (message) {
         var from = $(message).attr('from');
@@ -160,6 +161,14 @@ var Cav = {
             //    Index2: cmdNode.attr('index2')
             //};
 
+            if (cmd === 'game-started') {
+                Cav.player1 = cmdNode.attr('player1');
+                Cav.player2 = cmdNode.attr('player2');
+
+                var me = Cav.connection.jid;
+                Cav.opponent = (me === Cav.player1) ? Cav.player2 : Cav.player1;
+            }
+
             // call game logic handler
             Cav.GameController.Switch({
                 FunctionName: cmdNode.attr('functionname'),
@@ -177,16 +186,29 @@ var Cav = {
 
     // convert CavMsg to XMPP iq stanza and send it to the server
     submitMovement: function (cavMsg) {
-        Cav.connection.sendIQ($iq({ to: Cav.referee, type: 'set' })
-                            .c('move', {
-                                xmlns: Cav.NS_CAV,
-                                FunctionName: cavMsg.FunctionName,
-                                Turn: cavMsg.Turn,
-                                PokerCards: cavMsg.PokerCards.join(' '),
-                                PicMapping: cavMsg.PicMapping.join(' '),
-                                Index1: cavMsg.Index1,
-                                Index2: cavMsg.Index2
-                            }));
+        //Cav.connection.sendIQ($iq({ to: Cav.referee, type: 'set' })
+        //                    .c('move', {
+        //                        xmlns: Cav.NS_CAV,
+        //                        FunctionName: cavMsg.FunctionName,
+        //                        Turn: cavMsg.Turn,
+        //                        PokerCards: cavMsg.PokerCards.join(' '),
+        //                        PicMapping: cavMsg.PicMapping.join(' '),
+        //                        Index1: cavMsg.Index1,
+        //                        Index2: cavMsg.Index2
+        //                    }));
+
+        Cav.connection.send(
+                $msg({ to: Cav.opponent })
+                    //.c('body').t('The match has started.').up()
+                   .c('move', {
+                       xmlns: Cav.NS_CAV,
+                       FunctionName: cavMsg.FunctionName,
+                       Turn: cavMsg.Turn,
+                       PokerCards: cavMsg.PokerCards.join(' '),
+                       PicMapping: cavMsg.PicMapping.join(' '),
+                       Index1: cavMsg.Index1,
+                       Index2: cavMsg.Index2
+                   }));
     }
 
 };
