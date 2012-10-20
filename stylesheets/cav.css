@@ -129,12 +129,13 @@ input.button {
         height: 180px;
         position: relative;
         margin: auto;
-        top: 27px;
+        top: 15px;
         /*left:30px;*/
     }
 
 .OppHandCard .Beauty {
-    background-color: #361067;
+    /*background-color: #361067;*/
+    background-image:url('../images/plain-poker-back.jpg');
     background-size: 100%;
     background-repeat: no-repeat;
     background-position-x: center;
