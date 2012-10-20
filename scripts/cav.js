@@ -176,11 +176,11 @@ var Cav = {
                 //    $('#board-status').html("Opponent's move...");
                 //}
 
-                if (!Cav.watching) {
-                    $('#resign').removeAttr('disabled');
-                } else {
+                //if (!Cav.watching) {
+                //    $('#resign').removeAttr('disabled');
+                //} else {
                     $('#leave').removeAttr('disabled');
-                }
+                //}
             }
 
             // call game logic handler
