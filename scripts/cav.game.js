@@ -302,7 +302,7 @@ Cav.GameController.ReceivedSwap = function (cavMsg) {
 Cav.GameController.ReceivedDump = function (cavMsg) {
     var imgUrl = Cav.Pic
     var c1 = $(".OppHandCard").eq(cavMsg.Index1);
-    var c2 = $(".OppHandCaMapping[cavMsg.PokerCards[0]];
+    var c2 = $(".OppHandCard").eq(cavMsg.Index2);
     // 對方清掉牌的動畫rd").eq(cavMsg.Index2);
     c1.css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
     c2.css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
