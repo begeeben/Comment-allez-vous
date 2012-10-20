@@ -24,21 +24,31 @@
 			.css("top", p.top);
 
 		var c = {
-			moveTo: function (left, top, speed) {
-				$(t).animate({ left: left, top: top }, speed);
+			moveTo: function (left, top, speed, callback) {
+				$(t).animate({ left: left, top: top }, speed, callback);
 			},
 			moveUpFlag: false,
 			moveUp: function () {
+			    if (this.locked) return;
 				$(t).animate({ top: "-=92", "z-index": "+=100", width: "+=48", height: "+=72" }, 100)
 				.find(".Beauty").animate({ width: "+=48", height: "+=72" }, 100);
 			},
 			moveDown: function () {
-				$(t).animate({ top: "+=92", "z-index": "-=100", width: "-=48", height: "-=72" }, 100)
+			    if (this.locked) return;
+			    $(t).animate({ top: "+=92", "z-index": "-=100", width: "-=48", height: "-=72" }, 100)
 				.find(".Beauty").animate({ width: "-=48", height: "-=72" }, 100);
 			},
 
+			locked: true,
+			lock: function () {
+			    this.locked = true;
+			},
+			unlock: function () {
+			    this.locked = false;
+			},
+
+
 			dragStart: function (e) {
-				console.log("dragStart");
 				document.oPosition = $(t).offset();
 				document.oPosition.right = document.oPosition.left + $(t).width();
 				document.oPosition.bottom = document.oPosition.top + $(t).height();
@@ -46,6 +56,7 @@
 				document.dragPokerIndex = $(".HandCard").index(t);
 				document.pokerCopy = $(t).clone().removeClass("HandCard");
 				$(document.pokerCopy).css({
+                    "z-index":100,
 					position: 'absolute',
 					float: 'left',
 					display: 'none'
@@ -59,46 +70,53 @@
 			},
 			dragMove: function (e) {
 				if (document.pokerCopy) {
-					console.log("dragMove");
 					if (e.pageX > document.oPosition.right || e.pageX < document.oPosition.left || e.pageY > document.oPosition.bottom || e.pageY < document.oPosition.top) {
 						$('body').css('cursor', 'move');
 					} else {
 						$('body').css('cursor', 'pointer');
 					}
 					$(document.pokerCopy).css({
-						top: e.pageY + 15,
-						left: e.pageX + 15,
+						top: e.pageY,
+						left: e.pageX,
 						display: 'block'
 					});
 					$(document.dragPoker).hide();
 				}
 			},
 			dragEnd: function () {
-				if (document.pokerCopy) {
-					$(document.pokerCopy).remove();
-					$(document.dragPoker).show();
-					if (document.dragPokerTargetIndex != null) {
-						console.log(document.dragPokerTargetIndex);
-						console.log(document.dragPokerIndex);
-						console.log("dragEnd");
+			    if (document.pokerCopy) {
+			        $(document.pokerCopy).remove();
+			        $(document.dragPoker).show();
+			        if (document.dragPokerTargetIndex != null) {
+			            var tp = $(".HandCard").eq(document.dragPokerTargetIndex);
+			            var tSet = tp.offset();
+			            var tz = tp.css("z-index");
+			            var op = $(".HandCard").eq(document.dragPokerIndex);
+			            var oSet = op.offset();
+			            var oz = op.css("z-index");
 
-						var tp = $(".HandCard").eq(document.dragPokerTargetIndex);
-						var tSet = tp.offset();
-						var tz = tp.css("z-index");
+			            tp.animate({ "z-index": "+=100" }, 10).animate({ top: oSet.top - 5, left: oSet.left - 5 }, 1000).animate({ "z-index": oz }, 10);
+			            op.animate({ "z-index": "+=100" }, 10).animate({ top: tSet.top - 5, left: tSet.left - 5 }, 1000).animate({ "z-index": tz }, 10);
+			        } else if (document.clearPokerFlag) {
+			            var id = $(this).attr("num");
+			            var deckPosition = $("#Deck").offset();
+			            document.clearPokerList.splice(0, 0, id);
 
-						var op = $(".HandCard").eq(document.dragPokerIndex);
-						var oSet = op.offset();
-						var oz = op.css("z-index");
+			            $(".HandCard").eq(document.dragPokerIndex).animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).removeClass("HandCard", 10).addClass("DumpCard", 10);
 
-						tp.animate({ top: oSet.top - 5, left: oSet.left - 5, "z-index": oz });
-						op.animate({ top: tSet.top - 5, left: tSet.left - 5, "z-index": tz });
-					}
-					document.dragPoker = null;
-					document.oPosition = null;
-					document.dragPokerIndex = null;
-					document.dragPokerTargetIndex = null;
-					document.pokerCopy = null;
-				}
+			            if (document.clearPokerList.length == 2) {
+
+			            }
+			        }
+
+			        document.dragPoker = null;
+			        document.oPosition = null;
+			        document.dragPokerIndex = null;
+			        document.dragPokerTargetIndex = null;
+			        document.pokerCopy = null;
+			        document.clearPokerFlag = false;
+			    } 
+
 				$('body').css('cursor', 'default');
 				$('body').noSelect(false);
 
@@ -106,7 +124,8 @@
 			},
 		};
 
-		$(t).click(function () {
+	    $(t).click(function () {
+	        if (c.locked) return;
 			if (!c.moveUpFlag) {
 				c.moveUp();
 				c.moveUpFlag = true;
@@ -127,7 +146,19 @@
 
 				document.dragPokerTargetIndex = n;
 			}
+		}).mouseleave(function () {
+		    if (document.pokerCopy) {
+		        document.dragPokerTargetIndex = null;
+		    }
 		});
+
+	    document.clearPokerFlag = false;
+	    document.clearPokerList = [];
+	    $("#Deck").mouseenter(function () {
+	        document.clearPokerFlag = true;
+	    }).mouseleave(function () {
+	        document.clearPokerFlag = false;
+	    });
 
 		$(document).mouseup(function () { }, function (e) {
 			c.dragEnd();
@@ -156,12 +187,26 @@
 			}
 		});
 	};
-	$.fn.cavPokerMoveTo = function (left, top, speed) {
+	$.fn.cavPokerMoveTo = function (left, top, speed, callback) {
 		return this.each(function () {
-			if (this.cav) this.cav.moveTo(left, top, speed);
+		    if (this.cav) this.cav.moveTo(left, top, speed, callback);
 		});
 	};
-
+	$.fn.cavPokerMoveUp = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.moveUp();
+	    });
+	};
+	$.fn.cavPockerUnlock = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.unlock();
+	    });
+	};
+	$.fn.cavPockerLock = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.lock();
+	    });
+	};
 	$.fn.noSelect = function (p) { //no select plugin by me :-)
 		var prevent = (p == null) ? true : p;
 		if (prevent) {

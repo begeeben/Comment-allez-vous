@@ -54,7 +54,7 @@ Cav.GameController = {
                         Suit: -1,
                         handCard: false,
                         pokerTemplate: pokerTemplate,
-                        zIndex: i,
+                        zIndex: i + 1,
                         left: Cav.DeckPosition.X,
                         top: Cav.DeckPosition.Y
                     }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
@@ -74,10 +74,12 @@ Cav.GameController = {
                     handCard: true,
                     ImgUrl: cavMsg.PicMapping[card.No],
                     pokerTemplate: pokerTemplate,
-                    zIndex: i,
+                    zIndex: i + 1,
                     left: Cav.DeckPosition.X,
                     top: Cav.DeckPosition.Y
-                }).cavPokerMoveTo(positionX, Cav.HandCardBasicPosition.Y, delayTime);
+                }).cavPokerMoveTo(positionX, Cav.HandCardBasicPosition.Y, delayTime, function () {
+                    $(this).cavPockerUnlock();
+                });
 
             delayTime += Cav.DealSpeed;
             positionX += ($(".Poker")[0].offsetWidth / 3);
@@ -91,7 +93,7 @@ Cav.GameController = {
                         Suit: -1,
                         handCard: false,
                         pokerTemplate: pokerTemplate,
-                        zIndex: i,
+                        zIndex: i + 1,
                         left: Cav.DeckPosition.X,
                         top: Cav.DeckPosition.Y
                     }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
