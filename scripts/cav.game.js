@@ -13,7 +13,7 @@ Cav.GameController = {
         this[cavMsg.FunctionName](cavMsg);
     },
     GameStarted: function (cavMsg) {
-        Cav.PicMapping[0] = "images/TmpGirl/Joker.jpg";
+        cavMsg.PicMapping[0] = "images/TmpGirl/Joker.jpg";
 
         Cav.GameController.HandCards = cavMsg.PokerCards;
 
@@ -58,6 +58,14 @@ Cav.GameController = {
 
         //初始 Source
         Cav.PicMapping = cavMsg.PicMapping;
+
+        //Preload img
+        PreloadImgList = [];
+        for (var i in Cav.PicMapping) {
+            preloadImgList[i] = new Image()
+            preloadImgList[i].src = Cav.PicMapping[i];
+        }
+
         Cav.PokerSource.push({ Id: 0, No: 0, Suit: 0 });
         for (var id = 1; id <= 26; id++) {
             var no = id % 13;
@@ -218,7 +226,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
             Cav.GameController.HandCards.splice(index2, 1);
             Cav.GameController.HandCards.splice(index1, 1);
         }
-        /*
+
         Cav.submitMovement({
             FunctionName: 'ReceivedDump',
             Turn: null,
@@ -227,7 +235,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
             Index1: index1,
             Index2: index2
         });
-        */
+
         if (Cav.GameController.HandCards.length === 0) {
             Cav.Winning();
         }
@@ -251,7 +259,7 @@ Cav.GameController.Winning = function () {
     });
 
     // call獲勝動畫
-
+    alert("You Win!!");
 };
 
 //--------------------------------------------------------
@@ -272,19 +280,23 @@ Cav.GameController.ReceivedPickCard = function (cavMsg) {
 // 被抽走一張
 Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
     var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
+    Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
 
     //抽牌動畫
     var c1 = $(".HandCard").eq(cavMsg.Index1);
     c1.css("z-index", "+=100");
 
+    $(".OppHandCard:last").after(c1);
+
     var oppCardCount = $(".OppHandCard").length;
-    c1.cavPokerMoveTo(Cav.P2HandCardBasicPosition.X + (oppCardCount - 1) * ($("#Deck")[0].offsetWidth / 3), Cav.P2HandCardBasicPosition.Y, 1000, function () {
+    c1.cavPokerMoveDown();
+    c1.cavPokerMoveTo(Cav.P2HandCardBasicPosition.X + oppCardCount * ($("#Deck")[0].offsetWidth / 3), Cav.P2HandCardBasicPosition.Y, 1000, function () {
         c1.cavPokerTurnToBack(function () {
-            Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
+            c1.css("z-index", $(".OppHandCard").length + 1);
 
             $(".HandCard").each(function () {
                 var index = $(this).index(".HandCard");
-                $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100);
+                $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3), "z-index": index + 1 }, 100);
             });
 
             if (Cav.GameController.HandCards.length === 0) {
@@ -299,17 +311,21 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
 
     Cav.GameController.HandCards.push(cavMsg.PokerCards[0]);
 
-    var index = cavMsg.index1;
+    var index = cavMsg.Index1;
     var id = cavMsg.PokerCards[0];
     var no = id > 13?id-13:id;
     var imgUrl = Cav.PicMapping[no];
     var c = $(".OppHandCard").eq(index);
+    c.css("z-index", "+=100");
+
+    $(".HandCard:last").after(c);
 
     var handCardCount = $(".HandCard").length;
 
     c.cavPokerMoveDown(function () {
-        c.cavPokerMoveTo(Cav.HandCardBasicPosition.X + (handCardCount - 1) * ($("#Deck")[0].offsetWidth / 3), Cav.HandCardBasicPosition.Y, 1000, function () {
+        c.cavPokerMoveTo(Cav.HandCardBasicPosition.X + handCardCount * ($("#Deck")[0].offsetWidth / 3), Cav.HandCardBasicPosition.Y, 1000, function () {
             c.cavPokerTurnToFront(imgUrl, function () {
+                c.css("z-index", $(".HandCard").length + 1);
                 $(".OppHandCard").each(function () {
                     var index = $(this).index(".OppHandCard");
                     $(this).delay(100).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
@@ -349,32 +365,36 @@ Cav.GameController.ReceivedDump = function (cavMsg) {
     var c1 = $(".OppHandCard").eq(cavMsg.Index1);
     var c2 = $(".OppHandCard").eq(cavMsg.Index2);
     // 對方清掉牌的動畫rd").eq(cavMsg.Index2);
-    c1.css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
-    c2.css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
-
-    c1.delay(1000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
+    c1.css("z-index", "+=100").cavPokerTurnToFront(imgUrl, function () {
+        c1.delay(1000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
         .animate({ "z-index": 1 }, 10)
-        .addClass("PreDumpCard", 10)
-        .hide(10)
-        .addClass("DumpCard")
-        .removeClass("PreDumpCard")
-        .removeClass("HandCard");
+        .hide(10);
 
-    c2.delay(2000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
-        .addClass("PreDumpCard", 10)
-        .hide(10)
-        .addClass("DumpCard")
+        c1.addClass("DumpCard")
         .removeClass("PreDumpCard")
         .removeClass("HandCard")
-        .animate({ "z-index": 1 }, 10);
+        .removeClass("OppHandCard");
 
-    $(".OppHandCard").each(function () {
-        var index = $(this).index(".OppHandCard");
-        $(this).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 10);
+        c2.css("z-index", "+=100").cavPokerTurnToFront(imgUrl, function () {
+            c2.delay(2000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
+            .animate({ "z-index": 1 }, 10)
+            .hide(10);
+
+            c2.addClass("DumpCard")
+            .removeClass("PreDumpCard")
+            .removeClass("HandCard")
+            .removeClass("OppHandCard");
+
+            $(".OppHandCard").each(function () {
+                var index = $(this).index(".OppHandCard");
+                $(this).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3), "z-index": index + 1 }, 10);
+            });
+        });
     });
 };
 
 Cav.GameController.YouLose = function () {
     // call輸了的動畫
-   //$("").cavPokerScale();
+    //$("").cavPokerScale();
+    alert("You Lose!!");
 };

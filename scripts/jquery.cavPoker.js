@@ -54,14 +54,18 @@
 			    this.locked = false;
 			},
 
-			turnToFront: function (imgUrl) {
+			turnToFront: function (imgUrl, callback) {
 			    var op = $(t).offset();
 			    var ow = $(t).width();
 			    var oh = $(t).height();
 
 			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80, function () {
 			        $(t).removeClass("OppHandCard").addClass("HandCard").find(".Beauty").css("background-image", "url(" + imgUrl + ")");
-			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
+			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80, function () {
+			            if (callback) {
+			                callback();
+			            }
+			        });
 			    });
 			},
 			turnToBack: function (callback) {
@@ -70,9 +74,10 @@
 			    var oh = $(t).height();
 
 			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80, function () {
-			        $(t).removeClass("HandCard").addClass("OppHandCard");
-			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
-			        callback();
+			        $(t).removeClass("HandCard").addClass("OppHandCard").find(".Beauty").css("background-image", "");
+			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80, function () {
+			            callback();
+			        });
 			    });
 			},
 
@@ -149,8 +154,22 @@
 			            if (document.clearPokerList.length == 2) {
 			                var isMatch = Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
 			                if (isMatch) {
-			                    oCard.animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
-			                    $(".PreDumpCard").addClass("DumpCard").removeClass("PreDumpCard").removeClass("HandCard");
+			                    oCard.animate({ "z-index": "+=100" }, 10)
+                                    .animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000)
+                                    .animate({ "z-index": 1 }, 10)                                    
+                                    .hide(10);
+
+			                    oCard.addClass("DumpCard")
+                                    .removeClass("HandCard");
+
+			                    $(".PreDumpCard").addClass("DumpCard")
+                                    .removeClass("PreDumpCard")
+                                    .removeClass("HandCard");
+
+			                    $(".HandCard").each(function () {
+			                        var index = $(this).index(".HandCard");
+			                        $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3), "z-index": index + 1 }, 100);;
+			                    });
 
 			                    Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
 			                } else {
@@ -267,12 +286,18 @@
 	};
 	$.fn.cavPokerMoveUp = function () {
 	    return this.each(function () {
-	        if (this.cav) this.cav.moveUp();
+	        if (this.cav && !this.cav.moveUpFlag) {
+	            this.cav.moveUp();
+	            this.cav.moveUpFlag = true;
+	        }
 	    });
 	};
 	$.fn.cavPokerMoveDown = function (callback) {
 	    return this.each(function () {
-	        if (this.cav) this.cav.moveDown(callback);
+	        if (this.cav && this.cav.moveUpFlag) {
+	            this.cav.moveDown(callback);
+	            this.cav.moveUpFlag = false;
+	        }
 	    });
 	};
 	$.fn.cavPockerUnlock = function () {
@@ -285,9 +310,9 @@
 	        if (this.cav) this.cav.lock();
 	    });
 	};
-	$.fn.cavPokerTurnToFront = function (imgUrl) {
+	$.fn.cavPokerTurnToFront = function (imgUrl, callback) {
 	    return this.each(function () {
-	        if (this.cav) this.cav.turnToFront(imgUrl);
+	        if (this.cav) this.cav.turnToFront(imgUrl, callback);
 	    });
 	};
 	$.fn.cavPokerTurnToBack = function (callback) {
