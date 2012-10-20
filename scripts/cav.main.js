@@ -57,8 +57,14 @@ $(document).ready(function () {
         });
     });
     $('#getCavMsg').click(function () {
-        var testCav = Cav.convertGameMessage("<message to='elizabeth@longbourn.lit/sitting_room' from='toetem-789@games.pemberley.lit/referee' type='groupchat'><move xmlns='https://github.com/begeeben/Comment-allez-vous' functionName='test' turn=1 pokerCards='1 2' picMapping='http://google.com http://yahoo.com' index1=3 index2=2/></message>");
-        return true;
+        Cav.GameController.Switch({
+            FunctionName: 'ReceivedDump',
+            Turn: null,
+            PokerCards: [2, 15],
+            PicMapping: [],
+            Index1: 3,
+            Index2: 2
+        });
     });
 
     // test show/hide
