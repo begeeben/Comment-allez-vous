@@ -13,6 +13,7 @@ Cav.GameController = {
         this[cavMsg.FunctionName](cavMsg);
     },
     GameStarted: function (cavMsg) {
+        Cav.PicMapping[0] = "images/TmpGirl/Joker.jpg";
 
         Cav.GameController.HandCards = cavMsg.PokerCards;
 
