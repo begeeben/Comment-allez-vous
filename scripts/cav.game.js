@@ -269,7 +269,7 @@ Cav.GameController.ReceivedSwap = function (cavMsg) {
 Cav.GameController.ReceivedDump = function (cavMsg) {
 
     // 對方清掉牌的動畫
-    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerDumpCard(index1, index2, no);
+    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerDumpCard(index1, index2, imgUrl);
 
 };
 

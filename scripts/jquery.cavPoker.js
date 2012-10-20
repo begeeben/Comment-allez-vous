@@ -47,6 +47,9 @@
 			    this.locked = false;
 			},
 
+			cavPokerTurnToFront: function (imgUrl) {
+
+			},
 
 			dragStart: function (e) {
 				document.oPosition = $(t).offset();
@@ -101,26 +104,26 @@
 			            var oCard = $(".HandCard").eq(document.dragPokerIndex);
 			            var index = $(".HandCard").index(oCard);
 			            var deckPosition = $("#Deck").offset();
-			            document.clearPokerList.splice(0, 0, 
-                            { 
-                                index: index, 
-                                position: oCard.offset(), 
-                                card: oCard ,
-                                zIndex:oCard.css("z-index")
+			            document.clearPokerList.splice(document.clearPokerList.length, 0,
+                            {
+                                index: index,
+                                position: oCard.offset(),
+                                card: oCard,
+                                zIndex: oCard.css("z-index")
                             });
 
 			            if (document.clearPokerList.length == 2) {
 			                var isMatch = Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
 			                if (isMatch) {
+			                    oCard.animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
 			                    $(".PreDumpCard").addClass("DumpCard").removeClass("PreDumpCard").removeClass("HandCard");
 			                } else {
 			                    document.clearPokerList[0].card.show(100).animate({ "z-index": "+=100" }, 10).animate({ top: document.clearPokerList[0].position.top - 5, left: document.clearPokerList[0].position.left - 5 }, 1000).animate({ "z-index": document.clearPokerList[0].zIndex }, 10);
 			                }
 			                document.clearPokerList = [];
-			                return;
+			            } else {
+			                oCard.animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
 			            }
-
-			            oCard.animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
 			        }
 
 			        document.dragPoker = null;
@@ -224,6 +227,11 @@
 	$.fn.cavPokerSwap = function () {
 	    return this.each(function () {
 	        if (this.cav) alert("cavPokerSwap");
+	    });
+	};
+	$.fn.cavPokerTurnToFront = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.cavPokerTurnToFront(imgUrl);
 	    });
 	};
 
