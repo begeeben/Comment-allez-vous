@@ -273,8 +273,6 @@ Cav.GameController.ReceivedPickCard = function (cavMsg) {
 Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
     var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
 
-    Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
-
     //抽牌動畫
     var c1 = $(".HandCard").eq(cavMsg.Index1);
     c1.css("z-index", "+=100");
@@ -282,15 +280,16 @@ Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
     var oppCardCount = $(".OppHandCard").length;
     c1.cavPokerMoveTo(Cav.P2HandCardBasicPosition.X + (oppCardCount - 1) * ($("#Deck")[0].offsetWidth / 3), Cav.P2HandCardBasicPosition.Y, 1000, function () {
         c1.cavPokerTurnToBack(function () {
+            Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
+
             $(".HandCard").each(function () {
                 var index = $(this).index(".HandCard");
-                $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
-                    $("#ready-button")[0].disabled = false;
-                    if (Cav.GameController.HandCards.length === 0) {
-                        Cav.Winning();
-                    }
-                });
+                $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100);
             });
+
+            if (Cav.GameController.HandCards.length === 0) {
+                Cav.Winning();
+            }
         });
     });
 };
@@ -300,8 +299,26 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
 
     Cav.GameController.HandCards.push(cavMsg.PokerCards[0]);
 
-    // 抽到牌的動畫
-    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerGetFromOpp();
+    var index = cavMsg.index1;
+    var id = cavMsg.PokerCards[0];
+    var no = id > 13?id-13:id;
+    var imgUrl = Cav.PicMapping[no];
+    var c = $(".OppHandCard").eq(index);
+
+    var handCardCount = $(".HandCard").length;
+
+    c.cavPokerMoveDown(function () {
+        c.cavPokerMoveTo(Cav.HandCardBasicPosition.X + (handCardCount - 1) * ($("#Deck")[0].offsetWidth / 3), Cav.HandCardBasicPosition.Y, 1000, function () {
+            c.cavPokerTurnToFront(imgUrl, function () {
+                $(".OppHandCard").each(function () {
+                    var index = $(this).index(".OppHandCard");
+                    $(this).delay(100).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
+                        $("#ready-button")[0].disabled = false;
+                    });
+                });
+            });
+        });
+    });
 };
 
 // 收到對方交換牌的位置

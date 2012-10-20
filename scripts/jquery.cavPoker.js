@@ -37,10 +37,13 @@
 				$(t).animate({ top: "-=92", "z-index": "+=100", width: "+=48", height: "+=72" }, 100)
 				.find(".Beauty").animate({ width: "+=48", height: "+=72" }, 100);
 			},
-			moveDown: function () {
+			moveDown: function (callback) {
 			    if (this.locked) return;
 			    $(t).animate({ top: "+=92", "z-index": "-=100", width: "-=48", height: "-=72" }, 100)
 				.find(".Beauty").animate({ width: "-=48", height: "-=72" }, 100);
+			    if (callback) {
+			        callback();
+			    }
 			},
 
 			locked: true,
@@ -267,9 +270,9 @@
 	        if (this.cav) this.cav.moveUp();
 	    });
 	};
-	$.fn.cavPokerMoveDown = function () {
+	$.fn.cavPokerMoveDown = function (callback) {
 	    return this.each(function () {
-	        if (this.cav) this.cav.moveDown();
+	        if (this.cav) this.cav.moveDown(callback);
 	    });
 	};
 	$.fn.cavPockerUnlock = function () {
