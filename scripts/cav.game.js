@@ -59,12 +59,12 @@ Cav.GameController = {
         //初始 Source
         Cav.PicMapping = cavMsg.PicMapping;
 
-        //Preload img
-        PreloadImgList = [];
-        for (var i in Cav.PicMapping) {
-            preloadImgList[i] = new Image()
-            preloadImgList[i].src = Cav.PicMapping[i];
-        }
+        ////Preload img
+        //PreloadImgList = [];
+        //for (var i in Cav.PicMapping) {
+        //    preloadImgList[i] = new Image()
+        //    preloadImgList[i].src = Cav.PicMapping[i];
+        //}
 
         Cav.PokerSource.push({ Id: 0, No: 0, Suit: 0 });
         for (var id = 1; id <= 26; id++) {
