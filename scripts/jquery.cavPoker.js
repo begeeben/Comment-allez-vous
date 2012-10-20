@@ -63,7 +63,7 @@
 			    var oh = $(t).height();
 
 			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80, function () {
-			        $(t).removeClass("HandCard").addClass("OppHandCard").find(".Beauty").css("background-image", "");
+			        $(t).removeClass("HandCard").addClass("OppHandCard");
 			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
 			        callback();
 			    });
@@ -125,6 +125,8 @@
 			            tp.after(op);
 			            $(tmpFlag).after(tp);
 			            $(tmpFlag).remove();
+
+			            Cav.GameController.SwapCards(document.dragPokerTargetIndex, document.dragPokerIndex);
 			        } else if (document.clearPokerFlag) {
 			            var oCard = $(".HandCard").eq(document.dragPokerIndex);
 			            var index = $(".HandCard").index(oCard);
@@ -142,6 +144,8 @@
 			                if (isMatch) {
 			                    oCard.animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
 			                    $(".PreDumpCard").addClass("DumpCard").removeClass("PreDumpCard").removeClass("HandCard");
+
+			                    Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
 			                } else {
 			                    document.clearPokerList[0].card.show(100).animate({ "z-index": "+=100" }, 10).animate({ top: document.clearPokerList[0].position.top - 5, left: document.clearPokerList[0].position.left - 5 }, 1000).animate({ "z-index": document.clearPokerList[0].zIndex }, 10);
 			                }

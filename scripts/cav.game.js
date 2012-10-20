@@ -28,6 +28,33 @@ Cav.GameController = {
 
         $("#Deck").css("left", Cav.DeckPosition.X).css("top", Cav.DeckPosition.Y);
 
+        $("#pick-button").css("left", Cav.DeckPosition.X + ($("#Deck")[0].offsetWidth - $("#pick-button")[0].offsetWidth) / 2)
+            .css("top", Cav.DeckPosition.Y - 60);
+
+        $("#ready-button").css("left", Cav.DeckPosition.X + ($("#Deck")[0].offsetWidth - $("#ready-button")[0].offsetWidth) / 2)
+                    .css("top", Cav.DeckPosition.Y + $("#Deck")[0].offsetHeight + 30);
+
+        $("#ready-button").click(function () {
+            Cav.GameController.ReadyToBePicked();
+            $("#ready-button")[0].disabled = true;
+        });
+
+        $("#pick-button").click(function () {
+            var index = -1;
+            $(".OppHandCard").each(function () {
+                if (this.cav&&this.cav.moveUpFlag) {
+                    index = $(this).index(".OppHandCard");
+                }
+            });
+
+            Cav.GameController.ConfirmPickCard(index);
+            $("#pick-button")[0].disabled = false;
+        });
+
+        if (cavMsg.Turn == 0) {
+            $("#ready-button")[0].disabled = false;
+        }
+
         //初始 Source
         Cav.PicMapping = cavMsg.PicMapping;
         Cav.PokerSource.push({ Id: 0, No: 0, Suit: 0 });
@@ -233,6 +260,7 @@ Cav.GameController.OpponentReady = function () {
     // 通知本機可以抽牌了
     alert("Opp Ready");
     $(".OppHandCard").cavPockerUnlock();
+    $("#pick-button")[0].disabled = false;
 };
 
 Cav.GameController.ReceivedPickCard = function (cavMsg) {
@@ -242,11 +270,9 @@ Cav.GameController.ReceivedPickCard = function (cavMsg) {
 
 // 被抽走一張
 Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
-    //$(".HandCard").eq(cavMsg.Index1).cavPokerGiveToOpp();
-
     var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
 
-    //Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
+    Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
 
     //抽牌動畫
     var c1 = $(".HandCard").eq(cavMsg.Index1);
@@ -258,6 +284,7 @@ Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
             $(".HandCard").each(function () {
                 var index = $(this).index(".HandCard");
                 $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
+                    $("#ready-button")[0].disabled = false;
                     if (Cav.GameController.HandCards.length === 0) {
                         Cav.Winning();
                     }
