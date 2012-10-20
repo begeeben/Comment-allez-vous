@@ -94,7 +94,7 @@ var Cav = {
             $('#board-status').html('Waiting for other player...');
 
             var nick = Cav.connection.jid;
-            nick = nick.substring(0, nick.indexOf('@'));
+            //nick = nick.substring(0, nick.indexOf('@'));
 
             Cav.connection.send(
                 $pres({ to: Cav.game + '/' + nick })
@@ -128,8 +128,8 @@ var Cav = {
             // handle game messages
             // convert message to CavMsg
             var cavMsg = Cav.convertGameMessage(message);
-            // call game logic handler
-            Cav.GameController.Switch(cavMsg);
+            //// call game logic handler
+            //Cav.GameController.Switch(cavMsg);
 
         }
 
@@ -151,14 +151,24 @@ var Cav = {
         }
 
         if (cmd === 'move' || cmd === 'game-started') {
-            return {
+            //return {
+            //    FunctionName: cmdNode.attr('functionname'),
+            //    Turn: cmdNode.attr('turn'),
+            //    PokerCards: cmdNode.attr('pokercards').split(' '),
+            //    PicMapping: cmdNode.attr('picmapping').split(' '),
+            //    Index1: cmdNode.attr('index1'),
+            //    Index2: cmdNode.attr('index2')
+            //};
+
+            // call game logic handler
+            Cav.GameController.Switch({
                 FunctionName: cmdNode.attr('functionname'),
                 Turn: cmdNode.attr('turn'),
                 PokerCards: cmdNode.attr('pokercards').split(' '),
                 PicMapping: cmdNode.attr('picmapping').split(' '),
                 Index1: cmdNode.attr('index1'),
                 Index2: cmdNode.attr('index2')
-            };
+            });
         }
         else {
             return {};
