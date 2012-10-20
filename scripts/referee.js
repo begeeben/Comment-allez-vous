@@ -575,6 +575,8 @@ var Referee = {
                     .c('body').t('The match has started.').up()
                     .c('game-started', {
                         xmlns: Referee.NS_CAV,
+                        'player1': game.player1,
+                        'player2': game.player2,
                         'functionname': 'GameStarted',
                         'turn': 1,
                         'pokercards': game.player1Cards.join(' '),
@@ -587,6 +589,8 @@ var Referee = {
                    .c('body').t('The match has started.').up()
                    .c('game-started', {
                        xmlns: Referee.NS_CAV,
+                       'player1': game.player1,
+                       'player2': game.player2,
                        'functionname': 'GameStarted',
                        'turn': 0,
                        'pokercards': game.player2Cards.join(' '),
