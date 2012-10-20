@@ -40,11 +40,15 @@
     },
 
     hideChat: function (callback) {
-        $('#chat').hide('drop', {}, Cav.Animation.animationDuration, callback);
+
+        var hidePosition = $("html").width() - 50;
+        $('#chat').animate({ left: hidePosition, opacity: 0.7 }, Cav.Animation.animationDuration);
     },
 
     showChat: function (callback) {
-        $('#chat').show('drop', {}, Cav.Animation.animationDuration, callback);
+        var showPosition = $("html").width() - 250;
+        $('#chat').animate({ left: showPosition, opacity: 1 }, Cav.Animation.animationDuration);
+        //$('#chat').show('clip', {}, Cav.Animation.animationDuration, callback);
     },
 
     hideLoginDialog: function (callback) {
