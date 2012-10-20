@@ -21,9 +21,11 @@
 			.addClass(p.handCard ? "HandCard" : "OppHandCard")
 			.css("z-index", p.zIndex)
 			.css("left", p.left)
-			.css("top", p.top)
-	        .find(".Beauty")
-            .css("background-image", "url(" + p.ImgUrl + ")");
+			.css("top", p.top);
+
+		if (p.ImgUrl) {
+		    $(t).find(".Beauty").css("background-image", "url(" + p.ImgUrl + ")");
+		}
 
 		var c = {
 			moveTo: function (left, top, speed, callback) {

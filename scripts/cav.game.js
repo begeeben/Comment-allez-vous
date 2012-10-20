@@ -48,7 +48,7 @@ Cav.GameController = {
             });
 
             Cav.GameController.ConfirmPickCard(index);
-            $("#pick-button")[0].disabled = false;
+            $("#pick-button")[0].disabled = true;
         });
 
         if (cavMsg.Turn == 0) {
