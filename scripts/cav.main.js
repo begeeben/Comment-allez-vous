@@ -44,6 +44,9 @@ $(document).ready(function () {
 
         $('#browser').hide();
         $('#game').show();
+        $('#chat').css({ left: $("html").width(), opacity: 0.4 });
+        Cav.Animation.showChat();
+        Cav.Animation.hideChat();
         //Cav.draw_board();
         $('#board-status').html('');
 
@@ -134,6 +137,14 @@ $(document).ready(function () {
             }));
         $('#game').hide();
         $('#browser').show();
+    });
+
+    $('#chat').mouseover(function () {
+        Cav.Animation.showChat();
+    });
+
+    $('#chat').mouseleave(function () {
+        Cav.Animation.hideChat();
     });
 
     //    $('#board').click(function (ev) {
