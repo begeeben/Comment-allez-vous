@@ -2,6 +2,7 @@
 Cav.BoardAreaId = "board-area";
 Cav.PokerTemplateId = "HandCardTemplate";
 Cav.PokerSource = [];
+Cav.PicMapping = [];
 Cav.DealSpeed = 100;
 Cav.HandCardBasicPosition = { X: 0, Y: 0 };
 Cav.P2HandCardBasicPosition = { X: 0, Y: 0 };
@@ -28,6 +29,7 @@ Cav.GameController = {
         $(".DeckPosition").css("left", Cav.DeckPosition.X).css("top", Cav.DeckPosition.Y);
 
         //初始 Source
+        Cav.PicMapping = cavMsg.PicMapping;
         Cav.PokerSource.push({ Id: 0, No: 0, Suit: 0 });
         for (var id = 1; id <= 26; id++) {
             var no = id % 13;
@@ -229,7 +231,7 @@ Cav.GameController.Winning = function () {
 // 接收訊息-------------------------------------
 Cav.GameController.OpponentReady = function () {
     // 通知本機可以抽牌了
-
+    $(".OppHandCard").cavPockerUnlock();
 };
 
 Cav.GameController.ReceivedPickCard = function (cavMsg) {
@@ -238,8 +240,7 @@ Cav.GameController.ReceivedPickCard = function (cavMsg) {
 
 // 被抽走一張
 Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
-
-    //$(".HandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+    //$(".HandCard").eq(cavMsg.Index1).cavPokerGiveToOpp();
 
     var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
 
@@ -256,23 +257,23 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
     Cav.GameController.HandCards.push(cavMsg.PokerCards[0]);
 
     // 抽到牌的動畫
-    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerGetFromOpp();
 };
 
 // 收到對方交換牌的位置
 Cav.GameController.ReceivedSwap = function (cavMsg) {
-    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerSwap(index1, index2);
 };
 
 // 收到對方清掉的牌
 Cav.GameController.ReceivedDump = function (cavMsg) {
 
     // 對方清掉牌的動畫
-    //$(".OppHandCard").eq(cavMsg.Index1).xxxxxxxxxxxxxxx();
+    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerDumpCard(index1, index2, no);
 
 };
 
 Cav.GameController.YouLose = function () {
     // call輸了的動畫
-   
+   //$("").cavPokerScale();
 };
