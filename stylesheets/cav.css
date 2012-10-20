@@ -114,7 +114,7 @@ input.button {
         top: 325px;
     }
 
-    .HandCard .Beauty {
+    .Poker .Beauty {
         background-color: transparent;
         background-size: 100%;
         background-repeat: no-repeat;
@@ -128,16 +128,25 @@ input.button {
         /*left:30px;*/
     }
 
-    .OppHandCard .Beauty {
-        background-color: #361067;
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position-x: center;
-        background-position-y: center;
-        width: 120px;
-        height: 190px;
-        position: relative;
-        margin: auto;
-        top: 12px;
+.OppHandCard .Beauty {
+    background-color: #361067;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    width: 120px;
+    height: 190px;
+    position: relative;
+    margin: auto;
+    top: 12px;
     border-radius: 10px 10px 10px 10px;
-    }
+}
+
+ .EmptyDeck {
+    background-color: transparent;
+    border: dashed 3px rgba(0,0,0,0.4);
+     width: 140px;
+    height: 210px;
+    margin: 5px;
+    position: absolute;
+}

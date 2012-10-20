@@ -21,12 +21,12 @@ Cav.GameController = {
         Cav.P2HandCardBasicPosition.Y = $("#" + Cav.BoardAreaId).offset().top;
 
         Cav.HandCardBasicPosition.X = $("#" + Cav.BoardAreaId).offset().left;
-        Cav.HandCardBasicPosition.Y = $("#" + Cav.BoardAreaId).offset().top + $("#" + Cav.BoardAreaId)[0].offsetHeight - $(".Poker")[0].offsetHeight;
+        Cav.HandCardBasicPosition.Y = $("#" + Cav.BoardAreaId).offset().top + $("#" + Cav.BoardAreaId)[0].offsetHeight - $("#Deck")[0].offsetHeight;
 
-        Cav.DeckPosition.X = $("#" + Cav.BoardAreaId).offset().left + $("#" + Cav.BoardAreaId)[0].offsetWidth - 20 - $(".Poker")[0].offsetWidth;
-        Cav.DeckPosition.Y = $("#" + Cav.BoardAreaId).offset().top + ($("#" + Cav.BoardAreaId)[0].offsetHeight - $(".Poker")[0].offsetHeight) / 2;
+        Cav.DeckPosition.X = $("#" + Cav.BoardAreaId).offset().left + $("#" + Cav.BoardAreaId)[0].offsetWidth - 20 - $("#Deck")[0].offsetWidth;
+        Cav.DeckPosition.Y = $("#" + Cav.BoardAreaId).offset().top + ($("#" + Cav.BoardAreaId)[0].offsetHeight - $("#Deck")[0].offsetHeight) / 2;
 
-        $(".DeckPosition").css("left", Cav.DeckPosition.X).css("top", Cav.DeckPosition.Y);
+        $("#Deck").css("left", Cav.DeckPosition.X).css("top", Cav.DeckPosition.Y);
 
         //初始 Source
         Cav.PicMapping = cavMsg.PicMapping;
@@ -65,7 +65,7 @@ Cav.GameController = {
                     }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
 
                 delayTime += Cav.DealSpeed;
-                p2PositionX += ($(".Poker")[0].offsetWidth / 3);
+                p2PositionX += ($("#Deck")[0].offsetWidth / 3);
             }
 
             var id = cavMsg.PokerCards[i];
@@ -87,7 +87,7 @@ Cav.GameController = {
                 });
 
             delayTime += Cav.DealSpeed;
-            positionX += ($(".Poker")[0].offsetWidth / 3);
+            positionX += ($("#Deck")[0].offsetWidth / 3);
 
             if (p2CardLength == 14 && i == 12) {
                 //如果對手牌數為14則多發一張
@@ -104,7 +104,7 @@ Cav.GameController = {
                     }).cavPokerMoveTo(p2PositionX, Cav.P2HandCardBasicPosition.Y, delayTime);
 
                 delayTime += Cav.DealSpeed;
-                p2PositionX += ($(".Poker")[0].offsetWidth / 3);
+                p2PositionX += ($("#Deck")[0].offsetWidth / 3);
             }
         }
     }
