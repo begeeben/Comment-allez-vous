@@ -87,11 +87,14 @@ var Cav = {
             $('#wait').removeAttr('disabled');
             $('#browser').hide();
             $('#game').show();
+            $('#chat').css({ left: $("html").width(), opacity: 0.4 });
+            Cav.Animation.showChat();
+            Cav.Animation.hideChat();
             //Cav.draw_board();
             $('#board-status').html('Waiting for other player...');
 
             var nick = Cav.connection.jid;
-            //            nick = nick.substring(0, nick.indexOf('@'));
+            nick = nick.substring(0, nick.indexOf('@'));
 
             Cav.connection.send(
                 $pres({ to: Cav.game + '/' + nick })
