@@ -98,14 +98,15 @@
 			            tp.animate({ "z-index": "+=100" }, 10).animate({ top: oSet.top - 5, left: oSet.left - 5 }, 1000).animate({ "z-index": oz }, 10);
 			            op.animate({ "z-index": "+=100" }, 10).animate({ top: tSet.top - 5, left: tSet.left - 5 }, 1000).animate({ "z-index": tz }, 10);
 			        } else if (document.clearPokerFlag) {
-			            var id = $(this).attr("num");
+			            var index = $(".HandCard").index(this);
 			            var deckPosition = $("#Deck").offset();
-			            document.clearPokerList.splice(0, 0, id);
+			            document.clearPokerList.splice(0, 0, index);
 
-			            $(".HandCard").eq(document.dragPokerIndex).animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).removeClass("HandCard", 10).addClass("DumpCard", 10);
+			            $(".HandCard").eq(document.dragPokerIndex).animate({ "z-index": "+=100" }, 10).animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000).animate({ "z-index": 1 }, 10).addClass("PreDumpCard", 10).hide(10);
 
 			            if (document.clearPokerList.length == 2) {
-
+			                var isMatch = Cav.GameController.DumpMatchedCards(document.clearPokerList[0], document.clearPokerList[1]);
+			                console.log(isMatch);
 			            }
 			        }
 
@@ -207,6 +208,12 @@
 	        if (this.cav) this.cav.lock();
 	    });
 	};
+	$.fn.cavPokerSwap = function () {
+	    return this.each(function () {
+	        if (this.cav) alert("cavPokerSwap");
+	    });
+	};
+
 	$.fn.noSelect = function (p) { //no select plugin by me :-)
 		var prevent = (p == null) ? true : p;
 		if (prevent) {
