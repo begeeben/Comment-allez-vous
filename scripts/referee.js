@@ -453,8 +453,8 @@ var Referee = {
             cards[i] = i;
         }
         Referee.shuffle(cards);
-        game.player1Cards = cards.slice(0, 13);
-        game.player2Cards = cards.slice(14, 26);
+        game.player1Cards = cards.slice(0, 14);
+        game.player2Cards = cards.slice(14);
     },
     // Fisher¡VYates shuffle
     shuffle: function (array) {
