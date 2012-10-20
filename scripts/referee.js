@@ -453,8 +453,8 @@ var Referee = {
             cards[i] = i;
         }
         Referee.shuffle(cards);
-        game.player1Cards = cards.slice(0, 13);
-        game.player2Cards = cards.slice(14, 26);
+        game.player1Cards = cards.slice(0, 14);
+        game.player2Cards = cards.slice(14);
     },
     // Fisher¡VYates shuffle
     shuffle: function (array) {
@@ -578,7 +578,7 @@ var Referee = {
                         'player1': game.player1,
                         'player2': game.player2,
                         'functionname': 'GameStarted',
-                        'turn': 1,
+                        'turn': 0,
                         'pokercards': game.player1Cards.join(' '),
                         'picmapping': game.picMapping.join(' ')
                     }));
@@ -592,7 +592,7 @@ var Referee = {
                        'player1': game.player1,
                        'player2': game.player2,
                        'functionname': 'GameStarted',
-                       'turn': 0,
+                       'turn': 1,
                        'pokercards': game.player2Cards.join(' '),
                        'picmapping': game.picMapping.join(' ')
                    }));
