@@ -181,7 +181,7 @@ Cav.GameController.SwapCards = function (index1, index2) {
 Cav.GameController.DumpMatchedCards = function (index1, index2) {
 
     // 判斷牌有沒有成對
-    if (abs(Cav.GameController.HandCards[index1] - Cav.GameController.HandCards[index2]) === 13) {
+    if (Math.abs(Cav.GameController.HandCards[index1] - Cav.GameController.HandCards[index2]) === 13) {
         if (index1 > index2) {
             Cav.GameController.HandCards.splice(index1, 1);
             Cav.GameController.HandCards.splice(index2, 1);
@@ -190,7 +190,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
             Cav.GameController.HandCards.splice(index2, 1);
             Cav.GameController.HandCards.splice(index1, 1);
         }
-
+        /*
         Cav.submitMovement({
             FunctionName: 'ReceivedDump',
             Turn: null,
@@ -199,7 +199,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
             Index1: index1,
             Index2: index2
         });
-
+        */
         if (Cav.GameController.HandCards.length === 0) {
             Cav.Winning();
         }
