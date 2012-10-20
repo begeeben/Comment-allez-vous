@@ -267,10 +267,10 @@ Cav.GameController.ReceivedSwap = function (cavMsg) {
 
 // 收到對方清掉的牌
 Cav.GameController.ReceivedDump = function (cavMsg) {
-
+    var imgUrl = Cav.PicMapping[cavMsg.PokerCards[0]];
     // 對方清掉牌的動畫
-    //$(".OppHandCard").eq(cavMsg.Index1).cavPokerDumpCard(index1, index2, no);
-
+    $(".OppHandCard").eq(cavMsg.Index1).css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
+    $(".OppHandCard").eq(cavMsg.Index2).css("z-index", "+=100").cavPokerTurnToFront(imgUrl);
 };
 
 Cav.GameController.YouLose = function () {
