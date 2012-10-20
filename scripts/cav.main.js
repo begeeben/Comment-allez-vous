@@ -140,11 +140,13 @@ $(document).ready(function () {
     });
 
     $('#chat').mouseover(function () {
-        Cav.Animation.showChat();
+            $('#chat').stop();
+            Cav.Animation.showChat();
     });
 
     $('#chat').mouseleave(function () {
-        Cav.Animation.hideChat();
+            $('#chat').stop();
+            Cav.Animation.hideChat();
     });
 
     //    $('#board').click(function (ev) {
