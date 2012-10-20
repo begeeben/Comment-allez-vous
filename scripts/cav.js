@@ -167,6 +167,20 @@ var Cav = {
 
                 var me = Cav.connection.jid;
                 Cav.opponent = (me === Cav.player1) ? Cav.player2 : Cav.player1;
+
+                //if (Cav.x_player === me) {
+                //    Cav.my_side = 'x';
+                //    $('#board-status').html('Your move...');
+                //} else if (Cav.o_player === me) {
+                //    Cav.my_side = 'o';
+                //    $('#board-status').html("Opponent's move...");
+                //}
+
+                if (!Cav.watching) {
+                    $('#resign').removeAttr('disabled');
+                } else {
+                    $('#leave').removeAttr('disabled');
+                }
             }
 
             // call game logic handler
