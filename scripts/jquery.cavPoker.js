@@ -47,14 +47,26 @@
 			    this.locked = false;
 			},
 
-			cavPokerTurnToFront: function (imgUrl) {
+			turnToFront: function (imgUrl) {
 			    var op = $(t).offset();
 			    var ow = $(t).width();
 			    var oh = $(t).height();
 
-			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80);
-			    $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
-			    $(t).removeClass("OppHandCard").addClass("HandCard").find(".Beauty").css("background-image", "url(" + imgUrl + ")");
+			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80, function () {
+			        $(t).removeClass("OppHandCard").addClass("HandCard").find(".Beauty").css("background-image", "url(" + imgUrl + ")");
+			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
+			    });
+			},
+			turnToBack: function (callback) {
+			    var op = $(t).offset();
+			    var ow = $(t).width();
+			    var oh = $(t).height();
+
+			    $(t).animate({ width: 0, left: "+=" + ow / 2 }, 80, function () {
+			        $(t).removeClass("HandCard").addClass("OppHandCard").find(".Beauty").css("background-image", "");
+			        $(t).animate({ width: ow, left: "-=" + ow / 2 }, 80);
+			        callback();
+			    });
 			},
 
 			dragStart: function (e) {
@@ -159,9 +171,16 @@
 			if (!c.moveUpFlag) {
 				c.moveUp();
 				c.moveUpFlag = true;
-			} else {
+				t.cav = c;
+            } else {
 				c.moveDown();
 				c.moveUpFlag = false;
+				t.cav = c;
+			}
+            
+			if ($(t).hasClass("OppHandCard")) {
+			    var index = $(".OppHandCard").index($(t));
+			    Cav.GameController.PickCard(index);
 			}
 		}).mousedown(function (e) {
 			if (!$(t).hasClass("HandCard")) return;
@@ -222,9 +241,27 @@
 		    if (this.cav) this.cav.moveTo(left, top, speed, callback);
 		});
 	};
+	$.fn.cavPokerToggleUpDown = function () {
+	    return this.each(function () {
+	        if (this.cav) {
+	            if (!this.cav.moveUpFlag) {
+	                this.cav.moveUp();
+	                this.cav.moveUpFlag = true;
+	            } else {
+	                this.cav.moveDown();
+	                this.cav.moveUpFlag = false;
+	            }
+	        }
+	    });
+	};
 	$.fn.cavPokerMoveUp = function () {
 	    return this.each(function () {
 	        if (this.cav) this.cav.moveUp();
+	    });
+	};
+	$.fn.cavPokerMoveDown = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.moveDown();
 	    });
 	};
 	$.fn.cavPockerUnlock = function () {
@@ -237,14 +274,14 @@
 	        if (this.cav) this.cav.lock();
 	    });
 	};
-	$.fn.cavPokerSwap = function () {
-	    return this.each(function () {
-	        if (this.cav) alert("cavPokerSwap");
-	    });
-	};
 	$.fn.cavPokerTurnToFront = function (imgUrl) {
 	    return this.each(function () {
-	        if (this.cav) this.cav.cavPokerTurnToFront(imgUrl);
+	        if (this.cav) this.cav.turnToFront(imgUrl);
+	    });
+	};
+	$.fn.cavPokerTurnToBack = function (callback) {
+	    return this.each(function () {
+	        if (this.cav) this.cav.turnToBack(callback);
 	    });
 	};
 
