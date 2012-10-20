@@ -1,98 +1,84 @@
 html {
     height: 100%;
 }
-body
-{
+
+body {
     font-family: Helvetica;
     background: #00a03a; /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover,  #00a03a 0%, #006028 100%); /* FF3.6+ */
+    background: -moz-radial-gradient(center, ellipse cover, #00a03a 0%, #006028 100%); /* FF3.6+ */
     background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#00a03a), color-stop(100%,#006028)); /* Chrome,Safari4+ */
-    background: -webkit-radial-gradient(center, ellipse cover,  #00a03a 0%,#006028 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-radial-gradient(center, ellipse cover,  #00a03a 0%,#006028 100%); /* Opera 12+ */
-    background: -ms-radial-gradient(center, ellipse cover,  #00a03a 0%,#006028 100%); /* IE10+ */
-    background: radial-gradient(ellipse at center,  #00a03a 0%,#006028 100%); /* W3C */
+    background: -webkit-radial-gradient(center, ellipse cover, #00a03a 0%,#006028 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover, #00a03a 0%,#006028 100%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover, #00a03a 0%,#006028 100%); /* IE10+ */
+    background: radial-gradient(ellipse at center, #00a03a 0%,#006028 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00a03a', endColorstr='#006028',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
-#page-container
-{
+#page-container {
     width: 960px;
     margin: 5px auto;
 }
 
-h1
-{
+h1 {
     text-align: center;
 }
 
-.hidden
-{
+.hidden {
     display: none;
 }
 
-.buttons
-{
+.buttons {
     text-align: center;
 }
 
-input.button
-{
+input.button {
     margin: 10px;
 }
 
-#board
-{
+#board {
     width: 300px;
     height: 300px;
     background-color: #000;
 }
 
-#board-area
-{
-    width:1000px;
-    height:500px;
+#board-area {
+    width: 960px;
+    height: 500px;
     float: left;
 }
 
-#chat
-{
+#chat {
     padding-left: 25px;
     float: left;
 }
 
-#messages
-{
+#messages {
     padding: 5px 10px;
     width: 400px;
     height: 300px;
     background-color: #ddd;
 }
 
-#messages .system
-{
-    text-align: right;
-    font-style: italic;
-    font-weight: bold;
-    color: #999;
-}
+    #messages .system {
+        text-align: right;
+        font-style: italic;
+        font-weight: bold;
+        color: #999;
+    }
 
-#input
-{
+#input {
     width: 400px;
 }
 
-.nick
-{
+.nick {
     color: #00c;
 }
 
-.me
-{
+.me {
     color: #c00;
 }
 
-.block
-{
+.block {
     background-color: #FFFFFF;
     border-radius: 10px 10px 10px 10px;
     margin-left: 10px;
@@ -106,37 +92,52 @@ input.button
 
 .Poker {
     border: solid 1px #000000;
-    background-color: #facef2;
-    width: 180px;
-    height: 250px;
+    background-color: #ffffff;
+    width: 140px;
+    height: 210px;
     margin: 5px;
     position: absolute;
+    border-radius: 15px 15px 15px 15px;
+    box-shadow: 3px 4px 4px 4px #000;
 }
 
-.Poker.PokerBack {
-    background-image:url();
-}
+    .Poker.PokerBack {
+        background-image: url();
+    }
 
-.Poker.DeckPosition
-{
-	top:235px;
-	left:825px;
-}
+    /*.Poker.DeckPosition {
+        top: 235px;
+        left: 825px;
+    }*/
 
-.Poker.HandCardPosition {
-    top:325px;
-}
+    .Poker.HandCardPosition {
+        top: 325px;
+    }
 
-.Poker .Beauty
-{
-	background-color:transparent;
-    background-size:100%;
-    background-repeat:no-repeat;
-    background-position-x:center;
-    background-position-y:center;
-	width:120px;
-	height:180px;
-	position:relative;
-    top:35px;
-    left:30px;
-}
+    .HandCard .Beauty {
+        background-color: transparent;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-position-y: center;
+        width: 120px;
+        height: 180px;
+        position: relative;
+        margin: auto;
+        top: 27px;
+        /*left:30px;*/
+    }
+
+    .OppHandCard .Beauty {
+        background-color: #361067;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position-x: center;
+        background-position-y: center;
+        width: 120px;
+        height: 190px;
+        position: relative;
+        margin: auto;
+        top: 12px;
+    border-radius: 10px 10px 10px 10px;
+    }
