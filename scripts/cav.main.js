@@ -38,45 +38,45 @@ $(document).ready(function () {
     });
 
      //test CavMsg conversion
-    $('#sendCavMsg').click(function () {
-        Cav.game = $(this).parent().prev().text();
-        Cav.watching = true;
+    //$('#sendCavMsg').click(function () {
+    //    Cav.game = $(this).parent().prev().text();
+    //    Cav.watching = true;
 
-        $('#browser').hide();
-        $('#game').show();
-        $('#chat').css({ left: $("html").width(), opacity: 0.4 });
-        Cav.Animation.showChat();
-        Cav.Animation.hideChat();
-        //Cav.draw_board();
-        $('#board-status').html('');
+    //    $('#browser').hide();
+    //    $('#game').show();
+    //    $('#chat').css({ left: $("html").width(), opacity: 0.4 });
+    //    Cav.Animation.showChat();
+    //    Cav.Animation.hideChat();
+    //    //Cav.draw_board();
+    //    $('#board-status').html('');
 
-        Cav.GameController.Switch({
-            FunctionName: 'GameStarted',
-            Turn: 1,
-            PokerCards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 26],
-            PicMapping: ["images/TmpGirl/Joker.jpg", "images/TmpGirl/Beauty01.jpg", "images/TmpGirl/Beauty02.jpg", "images/TmpGirl/Beauty03.jpg", "images/TmpGirl/Beauty04.jpg", "images/TmpGirl/Beauty05.jpg", "images/TmpGirl/Beauty06.jpg", "images/TmpGirl/Beauty07.jpg", "images/TmpGirl/Beauty08.jpg", "images/TmpGirl/Beauty09.jpg", "images/TmpGirl/Beauty10.jpg", "images/TmpGirl/Beauty11.jpg", "images/TmpGirl/Beauty12.jpg", "images/TmpGirl/Beauty13.jpg"],
-            Index1: 3,
-            Index2: 2
-        });
-    });
-    $('#getCavMsg').click(function () {
-        Cav.GameController.Switch({
-            FunctionName: 'ReceivedDump',
-            Turn: null,
-            PokerCards: [2, 15],
-            PicMapping: [],
-            Index1: 3,
-            Index2: 2
-        });
-    });
+    //    Cav.GameController.Switch({
+    //        FunctionName: 'GameStarted',
+    //        Turn: 1,
+    //        PokerCards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 26],
+    //        PicMapping: ["images/TmpGirl/Joker.jpg", "images/TmpGirl/Beauty01.jpg", "images/TmpGirl/Beauty02.jpg", "images/TmpGirl/Beauty03.jpg", "images/TmpGirl/Beauty04.jpg", "images/TmpGirl/Beauty05.jpg", "images/TmpGirl/Beauty06.jpg", "images/TmpGirl/Beauty07.jpg", "images/TmpGirl/Beauty08.jpg", "images/TmpGirl/Beauty09.jpg", "images/TmpGirl/Beauty10.jpg", "images/TmpGirl/Beauty11.jpg", "images/TmpGirl/Beauty12.jpg", "images/TmpGirl/Beauty13.jpg"],
+    //        Index1: 3,
+    //        Index2: 2
+    //    });
+    //});
+    //$('#getCavMsg').click(function () {
+    //    Cav.GameController.Switch({
+    //        FunctionName: 'ReceivedDump',
+    //        Turn: null,
+    //        PokerCards: [2, 15],
+    //        PicMapping: [],
+    //        Index1: 3,
+    //        Index2: 2
+    //    });
+    //});
 
     // test show/hide
-    $('#show').click(function () {
-        Cav.Animation.showWaitingList(Cav.Animation.showGameList());
-    });
-    $('#hide').click(function () {
-        Cav.Animation.hideGameList(Cav.Animation.hideWaitingList());
-    });
+    //$('#show').click(function () {
+    //    Cav.Animation.showWaitingList(Cav.Animation.showGameList());
+    //});
+    //$('#hide').click(function () {
+    //    Cav.Animation.hideGameList(Cav.Animation.hideWaitingList());
+    //});
 
     $('input.stop_button').live('click', function () {
         Cav.connection.sendIQ(
