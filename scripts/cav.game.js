@@ -237,7 +237,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
         });
 
         if (Cav.GameController.HandCard.length === 0) {
-            Cav.Winning();
+            Cav.GameController.Winning();
         }
 
         return true;
@@ -300,7 +300,7 @@ Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
             });
 
             if (Cav.GameController.HandCard.length === 0) {
-                Cav.Winning();
+                Cav.GameController.Winning();
             }
         });
     });
