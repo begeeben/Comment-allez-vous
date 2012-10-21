@@ -152,8 +152,8 @@
                             });
 
 			            if (document.clearPokerList.length == 2) {
-			                var isMatch = Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
-			                if (isMatch) {
+			                //var isMatch = Cav.GameController.DumpMatchedCards(document.clearPokerList[0].index, document.clearPokerList[1].index);
+			                if (Math.abs(Cav.GameController.HandCard[document.clearPokerList[0].index] - Cav.GameController.HandCard[document.clearPokerList[1].index]) === 13) {
 			                    oCard.animate({ "z-index": "+=100" }, 10)
                                     .animate({ top: deckPosition.top - 5, left: deckPosition.left - 5 }, 1000)
                                     .animate({ "z-index": 1 }, 10)                                    
