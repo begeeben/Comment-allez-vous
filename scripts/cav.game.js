@@ -330,7 +330,7 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
             c.cavPokerTurnToFront(imgUrl, function () {
                 c.css("z-index", $(".HandCard").length + 1);
 
-                if (no === 0) {
+                if (no === "0") {
                     var shock = c.clone().hide();
                     $("#" + Cav.BoardAreaId).append(shock);
                     shock.css("top", $("#Deck").offset().top);
@@ -344,7 +344,7 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
                                     shock.animate({ top: "-=21", left: "-=14", height: "+=42", width: "+=24" }, 20, function () {
                                         shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 500, function () {
                                             shock.remove();
-                                            if (no === 0) {
+                                            if (no === "0") {
                                                 $(".OppHandCard").each(function () {
                                                     var index = $(this).index(".OppHandCard");
                                                     $(this).delay(100).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
