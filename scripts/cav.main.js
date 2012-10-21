@@ -193,8 +193,8 @@ $(document).bind('connected', function () {
     $('#disconnect').removeAttr('disabled');
     $('#wait').removeAttr('disabled');
 
-    Cav.Animation.showWaitingList(
-    Cav.Animation.showGameList());
+    Cav.Animation.showWaitingList();
+    //Cav.Animation.showGameList();
 
     Cav.connection.addHandler(Cav.on_message, null, "message");
 

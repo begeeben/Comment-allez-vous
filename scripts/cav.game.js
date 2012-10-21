@@ -15,7 +15,7 @@ Cav.GameController = {
     GameStarted: function (cavMsg) {
         cavMsg.PicMapping[0] = "images/TmpGirl/Joker.jpg";
 
-        Cav.GameController.HandCards = cavMsg.PokerCards;
+        Cav.GameController.HandCard = cavMsg.PokerCards;
 
         //依據BoardArea的大小及位置決定 發牌的起始位置
         Cav.P2HandCardBasicPosition.X = $("#" + Cav.BoardAreaId).offset().left;
@@ -195,13 +195,13 @@ Cav.GameController.SendPickedCard = function (index, cardId) {
 
 Cav.GameController.SwapCards = function (index1, index2) {
     // 抽出插入的理牌方式...不要想歪
-    //var temp = Cav.GameController.HandCards.splice(index1, 1);
-    //Cav.GameController.HandCards.splice(index2, 0, temp);
+    //var temp = Cav.GameController.HandCard.splice(index1, 1);
+    //Cav.GameController.HandCard.splice(index2, 0, temp);
 
     // 單純swap
-    var temp = Cav.GameController.HandCards[index1];
-    Cav.GameController.HandCards[index1] = Cav.GameController.HandCards[index2];
-    Cav.GameController.HandCards[index2] = Cav.GameController.HandCards[index1];
+    var temp = Cav.GameController.HandCard[index1];
+    Cav.GameController.HandCard[index1] = Cav.GameController.HandCard[index2];
+    Cav.GameController.HandCard[index2] = Cav.GameController.HandCard[index1];
 
     Cav.submitMovement({
         FunctionName: 'ReceivedSwap',
@@ -217,27 +217,27 @@ Cav.GameController.SwapCards = function (index1, index2) {
 Cav.GameController.DumpMatchedCards = function (index1, index2) {
 
     // 判斷牌有沒有成對
-    if (Math.abs(Cav.GameController.HandCards[index1] - Cav.GameController.HandCards[index2]) === 13) {
+    if (Math.abs(Cav.GameController.HandCard[index1] - Cav.GameController.HandCard[index2]) === 13) {
         if (index1 > index2) {
-            Cav.GameController.HandCards.splice(index1, 1);
-            Cav.GameController.HandCards.splice(index2, 1);
+            Cav.GameController.HandCard.splice(index1, 1);
+            Cav.GameController.HandCard.splice(index2, 1);
         }
         else {
-            Cav.GameController.HandCards.splice(index2, 1);
-            Cav.GameController.HandCards.splice(index1, 1);
+            Cav.GameController.HandCard.splice(index2, 1);
+            Cav.GameController.HandCard.splice(index1, 1);
         }
 
         Cav.submitMovement({
             FunctionName: 'ReceivedDump',
             Turn: null,
-            PokerCards: [Cav.GameController.HandCards[index1], Cav.GameController.HandCards[index2]],
+            PokerCards: [Cav.GameController.HandCard[index1], Cav.GameController.HandCard[index2]],
             PicMapping: [],
             Index1: index1,
             Index2: index2
         });
 
-        if (Cav.GameController.HandCards.length === 0) {
-            Cav.Winning();
+        if (Cav.GameController.HandCard.length === 0) {
+            Cav.GameController.Winning();
         }
 
         return true;
@@ -279,7 +279,7 @@ Cav.GameController.ReceivedPickCard = function (cavMsg) {
 
 // 被抽走一張
 Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
-    var pickedCard = Cav.GameController.HandCards.splice(cavMsg.Index1, 1);
+    var pickedCard = Cav.GameController.HandCard.splice(cavMsg.Index1, 1);
     Cav.GameController.SendPickedCard(cavMsg.Index1, pickedCard);
 
     //抽牌動畫
@@ -299,8 +299,8 @@ Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
                 $(this).delay(100).animate({ left: Cav.HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3), "z-index": index + 1 }, 100);
             });
 
-            if (Cav.GameController.HandCards.length === 0) {
-                Cav.Winning();
+            if (Cav.GameController.HandCard.length === 0) {
+                Cav.GameController.Winning();
             }
         });
     });
@@ -309,7 +309,7 @@ Cav.GameController.ReceivedConfirmPickCard = function (cavMsg) {
 // 拿到抽到的牌
 Cav.GameController.ReceivedCard = function (cavMsg) {
 
-    Cav.GameController.HandCards.push(cavMsg.PokerCards[0]);
+    Cav.GameController.HandCard.push(cavMsg.PokerCards[0]);
 
     var index = cavMsg.Index1;
     var id = cavMsg.PokerCards[0];
