@@ -201,7 +201,7 @@ Cav.GameController.SwapCards = function (index1, index2) {
     // 單純swap
     var temp = Cav.GameController.HandCard[index1];
     Cav.GameController.HandCard[index1] = Cav.GameController.HandCard[index2];
-    Cav.GameController.HandCard[index2] = Cav.GameController.HandCard[index1];
+    Cav.GameController.HandCard[index2] = temp;
 
     Cav.submitMovement({
         FunctionName: 'ReceivedSwap',
@@ -218,6 +218,9 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
 
     // 判斷牌有沒有成對
     if (Math.abs(Cav.GameController.HandCard[index1] - Cav.GameController.HandCard[index2]) === 13) {
+        var id1 = Cav.GameController.HandCard[index1];
+        var id2 = Cav.GameController.HandCard[index2];
+
         if (index1 > index2) {
             Cav.GameController.HandCard.splice(index1, 1);
             Cav.GameController.HandCard.splice(index2, 1);
@@ -230,7 +233,7 @@ Cav.GameController.DumpMatchedCards = function (index1, index2) {
         Cav.submitMovement({
             FunctionName: 'ReceivedDump',
             Turn: null,
-            PokerCards: [Cav.GameController.HandCard[index1], Cav.GameController.HandCard[index2]],
+            PokerCards: [id1, id2],
             PicMapping: [],
             Index1: index1,
             Index2: index2
@@ -361,28 +364,28 @@ Cav.GameController.ReceivedSwap = function (cavMsg) {
 
 // 收到對方清掉的牌
 Cav.GameController.ReceivedDump = function (cavMsg) {
-    var imgUrl = Cav.Pic
+    var imgUrl = Cav.PicMapping[cavMsg.PokerCards[0] > 13 ? cavMsg.PokerCards[0] - 13 : cavMsg.PokerCards[0]];
     var c1 = $(".OppHandCard").eq(cavMsg.Index1);
     var c2 = $(".OppHandCard").eq(cavMsg.Index2);
     // 對方清掉牌的動畫rd").eq(cavMsg.Index2);
     c1.css("z-index", "+=100").cavPokerTurnToFront(imgUrl, function () {
         c1.delay(1000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
-        .animate({ "z-index": 1 }, 10)
-        .hide(10);
+        .animate({ "z-index": 1 }, 10, function () {
+            c1.removeClass("HandCard").hide();
+        });
 
         c1.addClass("DumpCard")
-        .removeClass("PreDumpCard")
-        .removeClass("HandCard")
+        .removeClass("PreDumpCard")        
         .removeClass("OppHandCard");
 
         c2.css("z-index", "+=100").cavPokerTurnToFront(imgUrl, function () {
             c2.delay(2000).cavPokerMoveTo(Cav.DeckPosition.X, Cav.DeckPosition.Y, 1000)
-            .animate({ "z-index": 1 }, 10)
-            .hide(10);
+            .animate({ "z-index": 1 }, 10, function () { 
+                c2.removeClass("HandCard").hide();
+            });
 
             c2.addClass("DumpCard")
             .removeClass("PreDumpCard")
-            .removeClass("HandCard")
             .removeClass("OppHandCard");
 
             $(".OppHandCard").each(function () {

@@ -320,6 +320,11 @@
 	        if (this.cav) this.cav.turnToBack(callback);
 	    });
 	};
+	$.fn.cavPockerShock = function () {
+	    return this.each(function () {
+	        if (this.cav) this.cav.shock();
+	    });
+	};
 
 	$.fn.noSelect = function (p) { //no select plugin by me :-)
 		var prevent = (p == null) ? true : p;
