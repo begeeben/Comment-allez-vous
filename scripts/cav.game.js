@@ -329,12 +329,32 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
         c.cavPokerMoveTo(Cav.HandCardBasicPosition.X + handCardCount * ($("#Deck")[0].offsetWidth / 3), Cav.HandCardBasicPosition.Y, 1000, function () {
             c.cavPokerTurnToFront(imgUrl, function () {
                 c.css("z-index", $(".HandCard").length + 1);
-                $(".OppHandCard").each(function () {
-                    var index = $(this).index(".OppHandCard");
-                    $(this).delay(100).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
-                        $("#ready-button")[0].disabled = false;
-                    });
-                });
+
+                var shock = c.clone().hide();
+                $("#" + Cav.BoardAreaId).append(shock);
+                shock.css("top", $("#Deck").offset().top);
+                shock.css("left", $("#" + Cav.BoardAreaId).offset().left + ($("#" + Cav.BoardAreaId)[0].offsetWidth - $("#Deck")[0].offsetWidth) / 2);
+                shock.css("z-index", 1000);
+                shock.show();
+                shock.animate({ top: "-=105", left: "-=70", height: "+=210", width: "+=140" }, 20, function () {
+                    shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 20, function () {
+                        shock.animate({ top: "-=21", left: "-=14", height: "+=42", width: "+=24" }, 20, function () {
+                            shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 20, function () {
+                                shock.animate({ top: "-=21", left: "-=14", height: "+=42", width: "+=24" }, 20, function () {
+                                    shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 500, function () {
+                                        shock.remove();
+                                        $(".OppHandCard").each(function () {
+                                            var index = $(this).index(".OppHandCard");
+                                            $(this).delay(100).animate({ left: Cav.P2HandCardBasicPosition.X + index * ($("#Deck")[0].offsetWidth / 3) }, 100, function () {
+                                                $("#ready-button")[0].disabled = false;
+                                            });
+                                        });
+                                    }).find(".Beauty").animate({ height: "-=42", width: "-=24" }, 500);
+                                }).find(".Beauty").animate({ height: "+=42", width: "+=24" }, 20);
+                            }).find(".Beauty").animate({ height: "-=42", width: "-=24" }, 20);
+                        }).find(".Beauty").animate({ height: "+=42", width: "+=24" }, 20);
+                    }).find(".Beauty").animate({ height: "-=42", width: "-=24" }, 20);
+                }).find(".Beauty").animate({ height: "+=210", width: "+=140" }, 20);
             });
         });
     });
