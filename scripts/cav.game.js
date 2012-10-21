@@ -342,7 +342,7 @@ Cav.GameController.ReceivedCard = function (cavMsg) {
                             shock.animate({ top: "-=21", left: "-=14", height: "+=42", width: "+=24" }, 20, function () {
                                 shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 20, function () {
                                     shock.animate({ top: "-=21", left: "-=14", height: "+=42", width: "+=24" }, 20, function () {
-                                        shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 500, function () {
+                                        shock.animate({ top: "+=21", left: "+=14", height: "-=42", width: "-=24" }, 2000, function () {
                                             shock.remove();
                                             if (no === "0") {
                                                 $(".OppHandCard").each(function () {
